@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -70,21 +71,25 @@ public class AuthController {
             return new ResponseEntity<>("No Refresh Token", HttpStatus.UNAUTHORIZED);
 
         String refreshToken = cookie.getValue();
-
         AppUser user = refreshTokenService.validateRefreshToken(refreshToken);
 
         if (user == null)
             return new  ResponseEntity<>("Invalid Refresh Token", HttpStatus.UNAUTHORIZED);
 
+        // 엑세스 토큰 재발급
         String newAccessToken = jwtUtil.generateAccessToken(user.getMember().getEmail());
         response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + newAccessToken);
+
+        // 리프레시 토큰 업데이트(슬라이딩 방식)
+        if(!refreshTokenService.updateRefreshToken(response, refreshToken))
+            return new ResponseEntity<>("Already Logout User", HttpStatus.OK);
 
         return new ResponseEntity<>("Create New Access Token", HttpStatus.OK);
     }
 
     @Operation(
         summary = "로그아웃",
-        description = "프론트에서는 Access Token을 삭제하고, 해당 주소로 로그아웃 시도",
+        description = "프론트에서는 Access Token을 삭제하고, 해당 주소로 로그아웃 시도<br>엑세스 토큰 만료시 로그아웃 안되므로, 401인 경우 리프레시로 재발급 후 재로그아웃",
         parameters = {
             @Parameter(
                     in = ParameterIn.COOKIE,
@@ -101,6 +106,10 @@ public class AuthController {
                     @Header(name = "Set-Cookie", description = "refreshToken=None;")
                 }
             ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Access Token 누락 또는 유효하지 않음"
+            )
         }
     )
     @PostMapping("/logout")

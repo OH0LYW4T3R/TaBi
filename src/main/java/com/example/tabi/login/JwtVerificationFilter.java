@@ -17,7 +17,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Slf4j
-public class JwtAuthorizationFilter extends OncePerRequestFilter {
+public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -36,7 +36,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if(header == null || !header.startsWith("Bearer ")){
             // access 토큰이 없는 경우
-            filterChain.doFilter(request,response);
+            filterChain.doFilter(request,response); // -> UsernamePasswordJwtLoginFilter로 넘어가
             return;
         }
 
@@ -53,7 +53,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
             return;
         }
-
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             CustomUserDetails customUserDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(email);

@@ -18,14 +18,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 
 @Slf4j
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class UsernamePasswordJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
 
-     public JwtAuthenticationFilter(AuthenticationManager authManager,
-                                   JwtUtil jwtUtil,
-                                   RefreshTokenService refreshSvc) {
+     public UsernamePasswordJwtLoginFilter(AuthenticationManager authManager,
+                                           JwtUtil jwtUtil,
+                                           RefreshTokenService refreshSvc) {
         this.authenticationManager = authManager;
         this.jwtUtil = jwtUtil;
         this.refreshTokenService = refreshSvc;
@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String accessToken = jwtUtil.generateAccessToken(email);
         String refreshToken = jwtUtil.generateRefreshToken(email);
 
-        refreshTokenService.createOrUpdateToken(email, refreshToken);
+        refreshTokenService.createRefreshToken(email, refreshToken);
 
         response.setHeader("Authorization", "Bearer " + accessToken);
 
