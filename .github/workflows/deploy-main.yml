@@ -1,0 +1,45 @@
+name: Deploy to cloudtype
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Connect deploy key
+        uses: cloudtype-github-actions/connect@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          ghtoken: ${{ secrets.GHP_TOKEN }}
+      - name: Deploy
+        uses: cloudtype-github-actions/deploy@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          project: like_lion_12th/likelion-12th-backend
+          stage: main
+          yaml: >
+            name: tabi
+
+            app: java@19
+
+            options:
+              ports: "8080"
+              env:
+                - name: ACCESS_SECRET_KEY
+                  value: ${{ secrets.ACCESS_SECRET_KEY }}
+                - name: DB_PASSWORD
+                  value: ${{ secrets.DB_PASSWORD }}
+                - name: DB_USERNAME
+                  value: ${{ secrets.DB_USERNAME }}
+                - name: REFRESH_SECRET_KEY
+                  value: ${{ secrets.REFRESH_SECRET_KEY }}
+                - name: DB_URL
+                  value: ${{ secrets.DB_URL }}
+              buildenv: []
+            context:
+              git:
+                url: git@github.com:${{ github.repository }}.git
+                ref: ${{ github.ref }}
