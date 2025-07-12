@@ -16,7 +16,7 @@ public class JwtUtil {
     private String ACCESS_SECRET_KEY;
     @Value("${jwt.refresh.secret.key}")
     private String REFRESH_SECRET_KEY;
-    private final Long ACCESS_EXP = Duration.ofMinutes(15).toMillis();
+    private final Long ACCESS_EXP = Duration.ofMinutes(1).toMillis();
     private final Long REFRESH_EXP = Duration.ofDays(7).toMillis();
 
     public String generateAccessToken(String email) {

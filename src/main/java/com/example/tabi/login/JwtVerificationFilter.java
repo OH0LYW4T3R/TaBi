@@ -27,7 +27,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
         AntPathMatcher pathMatcher = new AntPathMatcher();
 
-        return pathMatcher.match("/api/auth/**", path) || pathMatcher.match("/api/app-user/initial/**", path);
+        return pathMatcher.match("/api/auth/login", path) || pathMatcher.match("/api/auth/refresh", path) || pathMatcher.match("/api/app-user/initial/**", path);
     }
 
     @Override
