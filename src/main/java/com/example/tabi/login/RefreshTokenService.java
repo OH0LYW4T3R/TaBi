@@ -21,7 +21,7 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final AppUserRepository appUserRepository;
     private final MemberRepository memberRepository;
-    private static final Integer MAX_DAYS = 8;
+    private static final Integer MAX_DAYS = 1;
 
     // Refresh Token 서버 저장
     // 로그인 -> 발급 -> 로그아웃 or 재로그인
