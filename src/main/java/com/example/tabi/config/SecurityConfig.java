@@ -23,7 +23,7 @@ public class SecurityConfig{
         http.cors(Customizer.withDefaults());
 
         http.authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests.requestMatchers("/api/app-user/initial/**").permitAll()
+                authorizeRequests.requestMatchers("/api/app-user/sign-up/**").permitAll()
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs").permitAll()
                         .requestMatchers("/error").permitAll()
                         //.requestMatchers(PathRequest.toH2Console()).permitAll()

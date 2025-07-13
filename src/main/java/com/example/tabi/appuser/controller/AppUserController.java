@@ -19,12 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class AppUserController {
     private final AppUserService appUserService;
 
-    @PostMapping("/initial/users")
-    public ResponseEntity<?> createUser(@RequestBody AppUserRequest appUserRequest) {
-        AppUserDto appUserDto = appUserService.createAppUser(appUserRequest);
-        return ResponseEntity.ok(appUserDto);
-    }
-
     @GetMapping("/my-info")
     public ResponseEntity<?> getMyInfo(Authentication authentication) {
         log.info("getMyInfo");

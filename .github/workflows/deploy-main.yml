@@ -38,6 +38,10 @@ jobs:
                   value: ${{ secrets.REFRESH_SECRET_KEY }}
                 - name: DB_URL
                   value: ${{ secrets.DB_URL }}
+                - name: GMAIL_EMAIL
+                  value: ${{ secrets.GMAIL_EMAIL }}
+                - name: APP_PASSWORD
+                  value: ${{ secrets.APP_PASSWORD }}
               buildenv: []
             context:
               git:

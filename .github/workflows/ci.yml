@@ -13,6 +13,8 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       ACCESS_SECRET_KEY: ${{ secrets.ACCESS_SECRET_KEY }}
       REFRESH_SECRET_KEY: ${{ secrets.REFRESH_SECRET_KEY }}
+      GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
+      APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
 
     steps:
       - name: Checkout code
