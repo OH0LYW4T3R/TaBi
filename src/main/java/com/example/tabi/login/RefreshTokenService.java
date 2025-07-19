@@ -6,6 +6,7 @@ import com.example.tabi.member.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RefreshTokenService {
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -59,6 +61,8 @@ public class RefreshTokenService {
     public void deleteByRefreshToken(String refreshToken) {
         RefreshToken targetRefreshToken = refreshTokenRepository.findByRefreshToken(refreshToken);
         refreshTokenRepository.delete(targetRefreshToken);
+        refreshTokenRepository.flush();
+        log.info("delete successful");
     }
 
     public boolean updateRefreshToken(HttpServletResponse response, String refreshToken) {
