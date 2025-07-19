@@ -1,6 +1,7 @@
 package com.example.tabi.appuser.entity;
 
 import com.example.tabi.member.entity.Member;
+import com.example.tabi.myprofile.entity.MyProfile;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,4 +30,6 @@ public class AppUser {
 
     @OneToOne(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Member member;
+    @OneToOne(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private MyProfile myProfile;
 }
