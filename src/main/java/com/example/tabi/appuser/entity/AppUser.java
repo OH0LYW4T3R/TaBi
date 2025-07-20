@@ -1,6 +1,7 @@
 package com.example.tabi.appuser.entity;
 
 import com.example.tabi.member.entity.Member;
+import com.example.tabi.mycharacter.entity.MyCharacter;
 import com.example.tabi.myprofile.entity.MyProfile;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -32,4 +33,6 @@ public class AppUser {
     private Member member;
     @OneToOne(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private MyProfile myProfile;
+    @OneToOne(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private MyCharacter myCharacter;
 }

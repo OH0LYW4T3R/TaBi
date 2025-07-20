@@ -11,6 +11,7 @@ import com.example.tabi.appuser.vo.EmailAuthRequest;
 import com.example.tabi.appuser.vo.EmailRequest;
 import com.example.tabi.member.entity.Member;
 import com.example.tabi.member.repository.MemberRepository;
+import com.example.tabi.mycharacter.service.MyCharacterService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,8 @@ public class AppUserSignUpServiceJpaImpl implements AppUserSignUpService {
     private final EmailAuthCodeRepository emailAuthCodeRepository;
     private static final int SCHEDULE_TIME = 12 * 60 * 60 * 1000;
     public static final int EXPIRATION_TIME_MINUTE = 5;
+
+    private final MyCharacterService myCharacterService;
 
     @Transactional
     @Override
@@ -56,6 +59,8 @@ public class AppUserSignUpServiceJpaImpl implements AppUserSignUpService {
 
         appUserRepository.save(appUser);
         memberRepository.save(member);
+
+        autoCreation(appUser);
 
         return AppUserServiceJpaImpl.appUserToAppUserDto(appUser);
     }
@@ -116,6 +121,11 @@ public class AppUserSignUpServiceJpaImpl implements AppUserSignUpService {
         emailAuthCodeRepository.delete(emailAuthCode); // 인증 완료된 경우에는 db에서 삭제
 
         return true;
+    }
+
+    @Override
+    public void autoCreation(AppUser appUser) {
+        myCharacterService.createMyCharacter(appUser);
     }
 
     @Scheduled(fixedRate = SCHEDULE_TIME)

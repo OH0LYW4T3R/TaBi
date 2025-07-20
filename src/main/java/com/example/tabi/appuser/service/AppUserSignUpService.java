@@ -1,5 +1,6 @@
 package com.example.tabi.appuser.service;
 
+import com.example.tabi.appuser.entity.AppUser;
 import com.example.tabi.appuser.vo.AppUserDto;
 import com.example.tabi.appuser.vo.AppUserRequest;
 import com.example.tabi.appuser.vo.EmailAuthRequest;
@@ -10,4 +11,6 @@ public interface AppUserSignUpService {
     Boolean generateEmailAuthenticationCode(EmailRequest emailRequest);
     Boolean verifyEmailCode(EmailAuthRequest emailAuthRequest);
     void removeExpiredCode();
+
+    void autoCreation(AppUser appUser);
 }
