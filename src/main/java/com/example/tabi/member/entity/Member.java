@@ -15,7 +15,7 @@ public class Member {
     private String email;
     private String password;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "app_user_id")
     private AppUser appUser;
 }
