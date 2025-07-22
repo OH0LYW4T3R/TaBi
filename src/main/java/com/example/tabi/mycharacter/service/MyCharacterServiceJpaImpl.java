@@ -32,8 +32,10 @@ public class MyCharacterServiceJpaImpl implements MyCharacterService {
             return null;
 
         Character character = characterRepository.findByCharacterNameAndRank("owl", 1);
+        Character character1 = characterRepository.findByCharacterNameAndRank("squirrel", 1);
         Set<Character> myCharacters = new HashSet<>();
         myCharacters.add(character);
+        myCharacters.add(character1);
 
         MyCharacter myCharacter = new MyCharacter();
         myCharacter.setMyCharacters(myCharacters);
