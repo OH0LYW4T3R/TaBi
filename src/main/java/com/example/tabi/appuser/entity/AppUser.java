@@ -3,12 +3,15 @@ package com.example.tabi.appuser.entity;
 import com.example.tabi.member.entity.Member;
 import com.example.tabi.mycharacter.entity.MyCharacter;
 import com.example.tabi.myprofile.entity.MyProfile;
+import com.example.tabi.treasurehunt.mytreasurehunt.entity.MyTreasureHunt;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -35,4 +38,8 @@ public class AppUser {
     private MyProfile myProfile;
     @OneToOne(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private MyCharacter myCharacter;
+
+
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MyTreasureHunt> myTreasureHunts = new ArrayList<>();
 }
