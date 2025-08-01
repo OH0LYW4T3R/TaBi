@@ -98,10 +98,10 @@ public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
 
         return treasureHuntPostToTreasureHuntPostDto(
                 treasureHuntPost,
-                PostCounterServiceJpaImpl.postCounterToPostCounterDto(postCounter),
-                RewardServiceJpaImpl.rewardToRewardDto(reward),
-                TreasureHuntLocationServiceJpaImpl.treasureHuntLocationToTreasureHuntLocationDto(treasureHuntLocation),
-                TreasureHuntPostImageServiceJpaImpl.treasureHuntPostImageToTreasureHuntPostImageDto(treasureHuntPostImage)
+                postCounter,
+                reward,
+                treasureHuntLocation,
+                treasureHuntPostImage
         );
     }
 
@@ -118,17 +118,10 @@ public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
         Page<TreasureHuntPost> posts = treasureHuntPostRepository.findVisiblePostsNotCreatedBy(appUser.getMyProfile().getNickName(), page);
 
         return posts.getContent().stream()
-            .map(post -> {
-                PostCounterDto postCounterDto = PostCounterServiceJpaImpl.postCounterToPostCounterDto(post.getPostCounter());
-                RewardDto rewardDto = RewardServiceJpaImpl.rewardToRewardDto(post.getReward());
-                TreasureHuntLocationDto locationDto = TreasureHuntLocationServiceJpaImpl.treasureHuntLocationToTreasureHuntLocationDto(post.getTreasureHuntStartLocation());
-                TreasureHuntPostImageDto imageDto = TreasureHuntPostImageServiceJpaImpl.treasureHuntPostImageToTreasureHuntPostImageDto(post.getTreasureHuntPostImages());
-
-                return TreasureHuntPostServiceJpaImpl.treasureHuntPostToTreasureHuntPostDto(post, postCounterDto, rewardDto, locationDto, imageDto);
-            }).toList();
+            .map(post -> TreasureHuntPostServiceJpaImpl.treasureHuntPostToTreasureHuntPostDto(post, post.getPostCounter(), post.getReward(), post.getTreasureHuntStartLocation(), post.getTreasureHuntPostImages())).toList();
     }
 
-    public static TreasureHuntPostDto treasureHuntPostToTreasureHuntPostDto(TreasureHuntPost post, PostCounterDto postCounterDto, RewardDto rewardDto, TreasureHuntLocationDto locationDto, TreasureHuntPostImageDto imageDto) {
+    public static TreasureHuntPostDto treasureHuntPostToTreasureHuntPostDto(TreasureHuntPost post, PostCounter postCounter, Reward reward, TreasureHuntLocation treasureHuntLocation, TreasureHuntPostImage treasureHuntPostImage) {
         return new TreasureHuntPostDto(
                 post.getTreasureHuntPostId(),
                 post.getUploadUserName(),
@@ -138,10 +131,10 @@ public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
                 post.isTermination(),
                 post.isLocked(),
                 post.isPub(),
-                postCounterDto,
-                rewardDto,
-                locationDto,
-                imageDto,
+                PostCounterServiceJpaImpl.postCounterToPostCounterDto(postCounter),
+                RewardServiceJpaImpl.rewardToRewardDto(reward),
+                TreasureHuntLocationServiceJpaImpl.treasureHuntLocationToTreasureHuntLocationDto(treasureHuntLocation),
+                TreasureHuntPostImageServiceJpaImpl.treasureHuntPostImageToTreasureHuntPostImageDto(treasureHuntPostImage),
                 post.getCreatedAt()
         );
     }

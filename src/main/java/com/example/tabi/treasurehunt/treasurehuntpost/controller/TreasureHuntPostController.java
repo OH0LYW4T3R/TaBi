@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/treasure-hunt-post")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "TreasureHuntPost", description = "보물찾기 포스팅 관련 API")
 public class TreasureHuntPostController {
     private final TreasureHuntPostService treasureHuntPostService;
 
