@@ -15,7 +15,7 @@ public class MyProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long myProfileId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nickName;
     private String profileImageUrl;
 

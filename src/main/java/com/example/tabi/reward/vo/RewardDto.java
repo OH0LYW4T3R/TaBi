@@ -1,4 +1,4 @@
-package com.example.tabi.reword.vo;
+package com.example.tabi.reward.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RewordDto {
+public class RewardDto {
     private Long rewordId;
     private int experience;
     private boolean type; // true = 일반 보상, false = 특별 보상

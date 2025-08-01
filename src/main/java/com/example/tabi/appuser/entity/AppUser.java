@@ -4,6 +4,7 @@ import com.example.tabi.member.entity.Member;
 import com.example.tabi.mycharacter.entity.MyCharacter;
 import com.example.tabi.myprofile.entity.MyProfile;
 import com.example.tabi.treasurehunt.mytreasurehunt.entity.MyTreasureHunt;
+import com.example.tabi.treasurehunt.mytreasurehuntplay.entity.MyTreasureHuntPlay;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -42,4 +43,7 @@ public class AppUser {
 
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MyTreasureHunt> myTreasureHunts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MyTreasureHuntPlay> myTreasureHuntPlays = new ArrayList<>();
 }

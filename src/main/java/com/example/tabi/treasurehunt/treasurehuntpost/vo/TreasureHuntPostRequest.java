@@ -1,6 +1,7 @@
 package com.example.tabi.treasurehunt.treasurehuntpost.vo;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class TreasureHuntPostRequest {
@@ -8,7 +9,7 @@ public class TreasureHuntPostRequest {
     private String treasureHuntTitle;
     private String treasureHuntDescription;
 
-    private String imageUrl;
+    private MultipartFile image;
 
     private double latitude;
     private double longitude;

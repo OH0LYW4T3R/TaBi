@@ -1,7 +1,7 @@
 package com.example.tabi.treasurehunt.treasurehuntpost.vo;
 
 import com.example.tabi.postcounter.vo.PostCounterDto;
-import com.example.tabi.reword.vo.RewordDto;
+import com.example.tabi.reward.vo.RewardDto;
 import com.example.tabi.treasurehunt.treasurehuntpostImage.vo.TreasureHuntPostImageDto;
 import com.example.tabi.treasurehunt.treasurehuntstartlocation.vo.TreasureHuntLocationDto;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,7 @@ public class TreasureHuntPostDto {
     private boolean pub;
 
     private PostCounterDto postCounter;
-    private RewordDto reword;
+    private RewardDto reword;
     private TreasureHuntLocationDto treasureHuntStartLocation;
     private TreasureHuntPostImageDto treasureHuntPostImage;
 
