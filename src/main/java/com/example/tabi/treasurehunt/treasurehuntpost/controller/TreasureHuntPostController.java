@@ -1,10 +1,12 @@
 package com.example.tabi.treasurehunt.treasurehuntpost.controller;
 
+import com.example.tabi.treasurehunt.mytreasurehuntplay.vo.PositionRequest;
 import com.example.tabi.treasurehunt.treasurehuntpost.entity.TreasureHuntPost;
 import com.example.tabi.treasurehunt.treasurehuntpost.service.TreasureHuntPostService;
 import com.example.tabi.treasurehunt.treasurehuntpost.vo.TreasureHuntPostDto;
 import com.example.tabi.treasurehunt.treasurehuntpost.vo.TreasureHuntPostRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,7 +34,7 @@ public class TreasureHuntPostController {
             사용자가 보물찾기를 생성.<br>  
             반드시 multipart/form-data형태로 요청을 보낼것.<br>
             .jpg, .jpeg, .png, .gif, .webp를 제외한 형태는 저장하지 않음<br>
-            MIME TYPE은 image/jpeg, image/png, "mage/gif, image/webp를 제외한 형식과 통신하지 않음.
+            MIME TYPE은 image/jpeg, image/png, image/gif, image/webp만 허용됨.
             """,
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
@@ -42,8 +44,16 @@ public class TreasureHuntPostController {
             )
         ),
         responses = {
-            @ApiResponse(responseCode = "200", description = "보물찾기 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "존재하지 않는 유저거나, 잘못된 이미지 형식, 확장자")
+            @ApiResponse(
+                responseCode = "200",
+                description = "보물찾기 생성 성공",
+                content = @Content(schema = @Schema(implementation = TreasureHuntPostDto.class))
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "존재하지 않는 유저거나, 잘못된 이미지 형식, 확장자",
+                content = @Content(schema = @Schema(implementation = String.class))
+            )
         }
     )
     @PostMapping(value = "/creation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -73,8 +83,19 @@ public class TreasureHuntPostController {
             )
         },
         responses = {
-            @ApiResponse(responseCode = "200", description = "조회 성공 or No more posts(조회할 포스터가 더이상 존재하지 않음)"),
-            @ApiResponse(responseCode = "400", description = "App User Not Found")
+            @ApiResponse(
+                responseCode = "200",
+                description = "조회 성공 or No more posts",
+                content = @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = TreasureHuntPostDto.class))
+                )
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "App User Not Found",
+                content = @Content(schema = @Schema(implementation = String.class))
+            )
         }
     )
     @GetMapping(value = "/read-ten")
@@ -88,5 +109,52 @@ public class TreasureHuntPostController {
             return ResponseEntity.ok("No more posts");
 
         return ResponseEntity.ok(treasureHuntPostDtos);
+    }
+
+
+    @Operation(
+        summary = "보물찾기 게시글 단건 조회",
+        description = "주어진 ID 값으로 특정 보물찾기 게시글을 조회.",
+        parameters = {
+            @io.swagger.v3.oas.annotations.Parameter(
+                name = "id",
+                description = "조회할 보물찾기 게시글 ID",
+                example = "1",
+                required = true
+            )
+        },
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "조회 성공",
+                content = @Content(schema = @Schema(implementation = TreasureHuntPostDto.class))
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "게시글이 존재하지 않음"
+            )
+        }
+    )
+    @GetMapping(value = "/read/{id}")
+    public ResponseEntity<?> readTreasureHuntPostById(@PathVariable Long id) {
+        TreasureHuntPostDto treasureHuntPostDto = treasureHuntPostService.getTreasureHuntPostById(id);
+
+        if (treasureHuntPostDto == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(treasureHuntPostDto);
+    }
+
+    @PostMapping("/play")
+    @Operation(
+        summary = "보물찾기 플레이 시작",
+        description = "요청한 보물찾기 게시글의 플레이버튼을 눌러 보물찾기를 시작 (실행중인 보물찾기)",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "플레이 시작 처리 성공 (사용자가 없거나 존재하지 않는 포스트면 아무 반응 없음)"),
+        }
+    )
+    public ResponseEntity<?> playTreasureHuntPost(Authentication authentication, @RequestBody PositionRequest positionRequest) {
+        treasureHuntPostService.playTreasureHuntPost(authentication, positionRequest);
+        return ResponseEntity.ok().build(); // or .noContent().build(); if you want 204
     }
 }

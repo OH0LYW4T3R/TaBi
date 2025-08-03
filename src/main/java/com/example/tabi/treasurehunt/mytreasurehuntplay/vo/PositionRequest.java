@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class PositionRequest {
+    private Long treasureHuntPostId;
+
     private double latitude;
     private double longitude;
 }

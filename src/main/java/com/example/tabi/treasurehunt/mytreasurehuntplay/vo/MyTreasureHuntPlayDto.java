@@ -18,4 +18,6 @@ public class MyTreasureHuntPlayDto {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    private String errorMessage;
 }

@@ -2,7 +2,6 @@ package com.example.tabi.util;
 
 public class GeoUtil {
     private static final double EARTH_RADIUS_KM = 6371.0;
-    private static final double BASE_RADIUS_KM = 1.0;
     /**
      * 위도, 경도를 기준으로 반경 1km 이내에 있는지 판단
      *
@@ -12,7 +11,7 @@ public class GeoUtil {
      * @param lon2 대상 경도
      * @return 1km 이내면 true, 아니면 false
      */
-    public static boolean isWithinRadius(double lat1, double lon1, double lat2, double lon2) {
+    public static boolean isWithinRadius(double lat1, double lon1, double lat2, double lon2, Double base_radius) {
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
 
@@ -23,6 +22,6 @@ public class GeoUtil {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double distanceKm = EARTH_RADIUS_KM * c;
 
-        return distanceKm <= BASE_RADIUS_KM;
+        return distanceKm <= base_radius;
     }
 }

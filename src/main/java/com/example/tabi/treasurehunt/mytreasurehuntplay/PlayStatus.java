@@ -10,5 +10,4 @@ public enum PlayStatus {
     PLAYING,
     PENDING,
     CLEARED,
-    TERMINATED,
 }

@@ -13,6 +13,7 @@ import com.example.tabi.reward.service.RewardService;
 import com.example.tabi.reward.service.RewardServiceJpaImpl;
 import com.example.tabi.reward.vo.RewardDto;
 import com.example.tabi.treasurehunt.mytreasurehunt.service.MyTreasureHuntService;
+import com.example.tabi.treasurehunt.mytreasurehuntplay.vo.PositionRequest;
 import com.example.tabi.treasurehunt.treasurehuntpost.entity.TreasureHuntPost;
 import com.example.tabi.treasurehunt.treasurehuntpost.repository.TreasureHuntPostRepository;
 import com.example.tabi.treasurehunt.treasurehuntpost.vo.TreasureHuntPostDto;
@@ -119,6 +120,36 @@ public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
 
         return posts.getContent().stream()
             .map(post -> TreasureHuntPostServiceJpaImpl.treasureHuntPostToTreasureHuntPostDto(post, post.getPostCounter(), post.getReward(), post.getTreasureHuntStartLocation(), post.getTreasureHuntPostImages())).toList();
+    }
+
+    @Override
+    public TreasureHuntPostDto getTreasureHuntPostById(Long id) {
+       Optional<TreasureHuntPost> optionalTreasureHuntPost = treasureHuntPostRepository.findById(id);
+
+       if (optionalTreasureHuntPost.isEmpty())
+            return null;
+
+       TreasureHuntPost treasureHuntPost = optionalTreasureHuntPost.get();
+
+       return treasureHuntPostToTreasureHuntPostDto(treasureHuntPost, treasureHuntPost.getPostCounter(), treasureHuntPost.getReward(), treasureHuntPost.getTreasureHuntStartLocation(), treasureHuntPost.getTreasureHuntPostImages());
+    }
+
+    @Override
+    public void playTreasureHuntPost(Authentication authentication, PositionRequest positionRequest) {
+        Optional<AppUser> optionalAppUser = AppUserServiceJpaImpl.authenticationToAppUser(authentication, memberRepository, appUserRepository);
+
+        if (optionalAppUser.isEmpty())
+            return;
+
+        AppUser appUser = optionalAppUser.get();
+
+        Optional<TreasureHuntPost> optionalTreasureHuntPost = treasureHuntPostRepository.findById(positionRequest.getTreasureHuntPostId());
+
+       if (optionalTreasureHuntPost.isEmpty())
+            return;
+
+       TreasureHuntPost treasureHuntPost = optionalTreasureHuntPost.get();
+       myTreasureHuntService.playMyTreasureHunt(appUser, treasureHuntPost);
     }
 
     public static TreasureHuntPostDto treasureHuntPostToTreasureHuntPostDto(TreasureHuntPost post, PostCounter postCounter, Reward reward, TreasureHuntLocation treasureHuntLocation, TreasureHuntPostImage treasureHuntPostImage) {
