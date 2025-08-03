@@ -27,7 +27,7 @@ public class TreasureHuntPostDto {
     private boolean pub;
 
     private PostCounterDto postCounter;
-    private RewardDto reword;
+    private RewardDto reward;
     private TreasureHuntLocationDto treasureHuntStartLocation;
     private TreasureHuntPostImageDto treasureHuntPostImage;
 

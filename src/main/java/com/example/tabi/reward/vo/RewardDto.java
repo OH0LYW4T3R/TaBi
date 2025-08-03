@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RewardDto {
-    private Long rewordId;
+    private Long rewardId;
     private int experience;
     private boolean type; // true = 일반 보상, false = 특별 보상
     private int creditCardCount;
