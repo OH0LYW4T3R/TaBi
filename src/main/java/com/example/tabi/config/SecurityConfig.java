@@ -26,6 +26,7 @@ public class SecurityConfig{
                 authorizeRequests.requestMatchers("/api/app-user/sign-up/**").permitAll()
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         //.requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers("/api/auth/login", "api/auth/refresh").permitAll()
                         .anyRequest().authenticated()
