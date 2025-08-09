@@ -15,5 +15,5 @@ public interface TreasureHuntPostService {
     List<TreasureHuntPostDto> readTenTreasureHuntPosts(Authentication authentication, int pages);
     TreasureHuntPostDto getTreasureHuntPostById(Long id);
 
-    void playTreasureHuntPost(Authentication authentication, PositionRequest positionRequest);
+    String playTreasureHuntPost(Authentication authentication, PositionRequest positionRequest);
 }

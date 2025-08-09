@@ -145,16 +145,36 @@ public class TreasureHuntPostController {
         return ResponseEntity.ok(treasureHuntPostDto);
     }
 
-    @PostMapping("/play")
     @Operation(
         summary = "보물찾기 플레이 시작",
-        description = "요청한 보물찾기 게시글의 플레이버튼을 눌러 보물찾기를 시작 (실행중인 보물찾기)",
+        description = """
+                요청한 보물찾기 게시글의 플레이버튼을 눌러 보물찾기를 시작 (실행중인 보물찾기) <br>
+                이미 실행 중이거나 종료된 경우, 혹은 작성자가 본인인 경우 실행이 제한  <br>
+                저장된 게시글 상태(SAVED)일 경우 삭제 후 실행으로 전환 <br>
+                """,
         responses = {
             @ApiResponse(responseCode = "200", description = "플레이 시작 처리 성공 (사용자가 없거나 존재하지 않는 포스트면 아무 반응 없음)"),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = """
+                        잘못된 요청으로 플레이 시작 실패. <br>
+                        가능한 실패 사유: <br>
+                        - User Not Found : 인증된 사용자가 없음 <br>
+                        - Treasure Hunt Post Not Found : 해당 게시글이 존재하지 않음 <br>
+                        - The creator cannot run. : 작성자는 실행 불가 <br>
+                        - This is a post that is already running. : 이미 실행 중 <br>
+                        - This post has been terminated. : 종료된 게시글 <br>
+                        """
+            )
         }
     )
+    @PostMapping("/play")
     public ResponseEntity<?> playTreasureHuntPost(Authentication authentication, @RequestBody PositionRequest positionRequest) {
-        treasureHuntPostService.playTreasureHuntPost(authentication, positionRequest);
-        return ResponseEntity.ok().build(); // or .noContent().build(); if you want 204
+        String result = treasureHuntPostService.playTreasureHuntPost(authentication, positionRequest);
+
+        if (result.equals("success"))
+            return ResponseEntity.ok().build(); // or .noContent().build(); if you want 204
+        else
+            return ResponseEntity.badRequest().body(result);
     }
 }

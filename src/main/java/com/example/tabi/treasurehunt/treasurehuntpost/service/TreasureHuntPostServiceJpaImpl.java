@@ -12,6 +12,9 @@ import com.example.tabi.reward.entity.Reward;
 import com.example.tabi.reward.service.RewardService;
 import com.example.tabi.reward.service.RewardServiceJpaImpl;
 import com.example.tabi.reward.vo.RewardDto;
+import com.example.tabi.treasurehunt.mytreasurehunt.PostStatus;
+import com.example.tabi.treasurehunt.mytreasurehunt.entity.MyTreasureHunt;
+import com.example.tabi.treasurehunt.mytreasurehunt.repository.MyTreasureHuntRepository;
 import com.example.tabi.treasurehunt.mytreasurehunt.service.MyTreasureHuntService;
 import com.example.tabi.treasurehunt.mytreasurehuntplay.vo.PositionRequest;
 import com.example.tabi.treasurehunt.treasurehuntpost.entity.TreasureHuntPost;
@@ -46,6 +49,7 @@ public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
     private final TreasureHuntPostRepository treasureHuntPostRepository;
     private final TreasureHuntPostImageService treasureHuntPostImageService;
     private final TreasureHuntLocationService treasureHuntLocationService;
+    private final MyTreasureHuntRepository myTreasureHuntRepository;
     private final MyTreasureHuntService myTreasureHuntService;
     private final RewardService rewardService;
     private final PostCounterService postCounterService;
@@ -135,21 +139,43 @@ public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
     }
 
     @Override
-    public void playTreasureHuntPost(Authentication authentication, PositionRequest positionRequest) {
+    public String playTreasureHuntPost(Authentication authentication, PositionRequest positionRequest) {
         Optional<AppUser> optionalAppUser = AppUserServiceJpaImpl.authenticationToAppUser(authentication, memberRepository, appUserRepository);
 
         if (optionalAppUser.isEmpty())
-            return;
+            return "User Not Found";
 
         AppUser appUser = optionalAppUser.get();
 
         Optional<TreasureHuntPost> optionalTreasureHuntPost = treasureHuntPostRepository.findById(positionRequest.getTreasureHuntPostId());
 
        if (optionalTreasureHuntPost.isEmpty())
-            return;
+            return "Treasure Hunt Post Not Found";
 
        TreasureHuntPost treasureHuntPost = optionalTreasureHuntPost.get();
+
+       Optional<MyTreasureHunt> myTreasureHunts = myTreasureHuntRepository.findByAppUserAndTreasureHuntPost(appUser, treasureHuntPost);
+
+       if (myTreasureHunts.isPresent()) {
+           MyTreasureHunt myTreasureHunt = myTreasureHunts.get();
+
+            if (myTreasureHunt.getStatus() == PostStatus.CREATED)
+                return "The creator cannot run.";
+
+            if (myTreasureHunt.getStatus() == PostStatus.RUNNING)
+                return "This is a post that is already running.";
+
+            if (myTreasureHunt.getStatus() == PostStatus.TERMINATED)
+                return "This post has been terminated.";
+
+            if (myTreasureHunt.getStatus() == PostStatus.SAVED) {
+                myTreasureHuntRepository.delete(myTreasureHunt); // 저장된건 삭제하고 플레이로 넘김
+            }
+       }
+
        myTreasureHuntService.playMyTreasureHunt(appUser, treasureHuntPost);
+
+       return "success";
     }
 
     public static TreasureHuntPostDto treasureHuntPostToTreasureHuntPostDto(TreasureHuntPost post, PostCounter postCounter, Reward reward, TreasureHuntLocation treasureHuntLocation, TreasureHuntPostImage treasureHuntPostImage) {

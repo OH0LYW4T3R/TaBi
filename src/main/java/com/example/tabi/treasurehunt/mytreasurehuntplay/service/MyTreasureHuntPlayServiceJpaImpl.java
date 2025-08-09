@@ -41,97 +41,6 @@ public class MyTreasureHuntPlayServiceJpaImpl implements MyTreasureHuntPlayServi
 
     @Override
     @Transactional
-    public MyTreasureHuntPlayDto clearedTreasureHuntPlay(Authentication authentication, PositionRequest positionRequest) {
-        // myTreasureHuntPlay를 cleared 시키고 TreasureHuntPost에 연결된 모든 myTreasureHunt를 terminated로 변경후 TreasureHuntPost의 termination부분도 true
-        // 클리어시 treasureHuntPost termination을 true로 하고 참여자 전부 MyTreasureHunt의 status를 Terminated로 바꿈
-        MyTreasureHuntPlayDto myTreasureHuntPlayDto = new MyTreasureHuntPlayDto();
-
-        Optional<AppUser> optionalAppUser = AppUserServiceJpaImpl.authenticationToAppUser(authentication, memberRepository, appUserRepository);
-
-        if (optionalAppUser.isEmpty()) {
-            myTreasureHuntPlayDto.setErrorMessage("AppUser Not Found");
-            return myTreasureHuntPlayDto;
-        }
-
-        AppUser appUser = optionalAppUser.get();
-
-        TreasureHuntPost treasureHuntPost = treasureHuntPostRepository.findById(positionRequest.getTreasureHuntPostId()).orElse(null);
-
-        if (treasureHuntPost == null) {
-            myTreasureHuntPlayDto.setErrorMessage("Already Deleted or AppUser Not Found"); // 삭제되거나 없는 포스트
-            return myTreasureHuntPlayDto;
-        }
-
-        if (treasureHuntPost.isTermination()) {
-            myTreasureHuntPlayDto.setErrorMessage("Already Terminated Treasure Hunt Posting");
-            return myTreasureHuntPlayDto;
-        }
-
-        if (!GeoUtil.isWithinRadius(treasureHuntPost.getTreasureHuntStartLocation().getLatitude(), treasureHuntPost.getTreasureHuntStartLocation().getLongitude(), positionRequest.getLatitude(),  positionRequest.getLongitude(), SUCCESS_RADIUS_KM)) {
-            myTreasureHuntPlayDto.setErrorMessage("Current Position isn't within Radius of Treasure Hunt Posting (1.5m)");
-            return myTreasureHuntPlayDto;
-        }
-
-        treasureHuntPost.setTermination(true);
-        treasureHuntPostRepository.save(treasureHuntPost);
-        treasureHuntPostRepository.flush();
-
-        List<MyTreasureHunt> myTreasureHunts = treasureHuntPost.getMyTreasureHunts();
-
-        for (MyTreasureHunt myTreasureHunt : myTreasureHunts) {
-            myTreasureHunt.setStatus(PostStatus.TERMINATED);
-        }
-
-        MyTreasureHuntPlay myTreasureHuntPlay = myTreasureHuntPlayRepository.findByAppUserAndTreasureHuntPost(appUser, treasureHuntPost);
-        myTreasureHuntPlay.setPlayStatus(PlayStatus.CLEARED);
-        myTreasureHuntPlayRepository.save(myTreasureHuntPlay);
-
-        return myTreasureHuntPlayToMyTreasureHuntPlayDto(myTreasureHuntPlay);
-    }
-
-    @Override
-    @Transactional
-    public MyTreasureHuntPlayDto changeToAvailableTreasureHuntPlay(Authentication authentication, PositionRequest positionRequest) {
-        // 다른 누군가가 완료하지 않아서 종료되지 않았으며 목적지 반경에 들었는가를 확인후 MyTreasureHuntplay 생성
-        MyTreasureHuntPlayDto myTreasureHuntPlayDto = new MyTreasureHuntPlayDto();
-
-        Optional<AppUser> optionalAppUser = AppUserServiceJpaImpl.authenticationToAppUser(authentication, memberRepository, appUserRepository);
-
-        if (optionalAppUser.isEmpty()) {
-            myTreasureHuntPlayDto.setErrorMessage("AppUser Not Found");
-            return myTreasureHuntPlayDto;
-        }
-
-        AppUser appUser = optionalAppUser.get();
-
-        TreasureHuntPost treasureHuntPost = treasureHuntPostRepository.findById(positionRequest.getTreasureHuntPostId()).orElse(null);
-
-        if (treasureHuntPost == null) {
-            myTreasureHuntPlayDto.setErrorMessage("Already Deleted and Not Found"); // 삭제되거나 없는 포스트
-            return myTreasureHuntPlayDto;
-        }
-
-        if (treasureHuntPost.isTermination()) {
-            myTreasureHuntPlayDto.setErrorMessage("Already Terminated Treasure Hunt Posting");
-            return myTreasureHuntPlayDto;
-        }
-
-        if (!GeoUtil.isWithinRadius(treasureHuntPost.getTreasureHuntStartLocation().getLatitude(), treasureHuntPost.getTreasureHuntStartLocation().getLongitude(), positionRequest.getLatitude(),  positionRequest.getLongitude(), BASE_RADIUS_KM)) {
-            myTreasureHuntPlayDto.setErrorMessage("Current Position isn't within Radius of Treasure Hunt Posting (1km)");
-            return myTreasureHuntPlayDto;
-        }
-
-        MyTreasureHuntPlay myTreasureHuntPlay = new MyTreasureHuntPlay();
-        myTreasureHuntPlay.setAppUser(appUser);
-        myTreasureHuntPlay.setTreasureHuntPost(treasureHuntPost);
-        myTreasureHuntPlay.setPlayStatus(PlayStatus.AVAILABLE);
-        myTreasureHuntPlayRepository.save(myTreasureHuntPlay);
-
-        return myTreasureHuntPlayToMyTreasureHuntPlayDto(myTreasureHuntPlay);
-    }
-
-    @Override
-    @Transactional
     public MyTreasureHuntPlayDto changeToSpecificStatusTreasureHuntPlay(Authentication authentication, PositionRequest positionRequest, PlayStatus playStatus) {
         MyTreasureHuntPlayDto myTreasureHuntPlayDto = new MyTreasureHuntPlayDto();
 
@@ -232,38 +141,6 @@ public class MyTreasureHuntPlayServiceJpaImpl implements MyTreasureHuntPlayServi
                 myTreasureHuntPlayDto.setErrorMessage("Wrong Status Setting (Sever Error)");
                 return myTreasureHuntPlayDto;
         }
-    }
-
-    @Override
-    public MyTreasureHuntPlayDto changeToPlayingTreasureHuntPlay(Authentication authentication, PositionRequest positionRequest) {
-        return null;
-    }
-
-    @Override
-    public MyTreasureHuntPlayDto changeToClearedTreasureHuntPlay(Authentication authentication) {
-        // 클리어시 treasureHuntPost termination을 true로 하고 참여자 전부 MyTreasureHunt의 status를 Terminated로 바꿈
-        return null;
-    }
-
-    @Override
-    public List<MyTreasureHuntPlayDto> getAvailableTreasureHuntPlays(Authentication authentication) {
-        Optional<AppUser> optionalAppUser = AppUserServiceJpaImpl.authenticationToAppUser(authentication, memberRepository, appUserRepository);
-
-        if (optionalAppUser.isEmpty())
-            return null;
-
-        AppUser appUser = optionalAppUser.get();
-
-        List<MyTreasureHuntPlay> myTreasureHuntPlays = myTreasureHuntPlayRepository.findByAppUserAndPlayStatus(appUser, PlayStatus.AVAILABLE);
-        List<MyTreasureHuntPlay> excludeTerminatedTreasureHuntPost = new ArrayList<>();
-
-        for (MyTreasureHuntPlay myTreasureHuntPlay : myTreasureHuntPlays) {
-            if (!myTreasureHuntPlay.getTreasureHuntPost().isTermination()) {
-                excludeTerminatedTreasureHuntPost.add(myTreasureHuntPlay);
-            }
-        }
-
-        return excludeTerminatedTreasureHuntPost.stream().map(MyTreasureHuntPlayServiceJpaImpl::myTreasureHuntPlayToMyTreasureHuntPlayDto).collect(Collectors.toList());
     }
 
     @Override
