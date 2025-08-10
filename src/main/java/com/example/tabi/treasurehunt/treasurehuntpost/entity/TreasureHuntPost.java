@@ -4,6 +4,7 @@ import com.example.tabi.postcounter.entity.PostCounter;
 import com.example.tabi.reward.entity.Reward;
 import com.example.tabi.treasurehunt.mytreasurehunt.entity.MyTreasureHunt;
 import com.example.tabi.treasurehunt.treasurehuntpostImage.entity.TreasureHuntPostImage;
+import com.example.tabi.treasurehunt.treasurehuntpostcomment.entity.TreasureHuntPostComment;
 import com.example.tabi.treasurehunt.treasurehuntstartlocation.entity.TreasureHuntLocation;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -48,6 +49,9 @@ public class TreasureHuntPost {
     // 참여 기록 (MyTreasureHunt)
     @OneToMany(mappedBy = "treasureHuntPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MyTreasureHunt> myTreasureHunts;
+
+    @OneToMany(mappedBy = "treasureHuntPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TreasureHuntPostComment> treasureHuntPostComments;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
