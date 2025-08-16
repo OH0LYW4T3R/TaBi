@@ -27,9 +27,9 @@ public class MyCharacterServiceJpaImpl implements MyCharacterService {
     private final MyCharacterRepository myCharacterRepository;
 
     @Override
-    public MyCharacterDto createMyCharacter(AppUser appUser) {
+    public void createMyCharacter(AppUser appUser) {
         if (myCharacterRepository.existsByAppUser(appUser))
-            return null;
+            return;
 
         Character character = characterRepository.findByCharacterNameAndRank("owl", 1);
         Character character1 = characterRepository.findByCharacterNameAndRank("squirrel", 1);
@@ -43,7 +43,7 @@ public class MyCharacterServiceJpaImpl implements MyCharacterService {
 
         myCharacterRepository.save(myCharacter);
 
-        return myCharacterToMyCharacterDto(myCharacter);
+        myCharacterToMyCharacterDto(myCharacter);
     }
 
     @Override

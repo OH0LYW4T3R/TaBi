@@ -12,6 +12,7 @@ import com.example.tabi.appuser.vo.EmailRequest;
 import com.example.tabi.member.entity.Member;
 import com.example.tabi.member.repository.MemberRepository;
 import com.example.tabi.mycharacter.service.MyCharacterService;
+import com.example.tabi.myinventory.service.MyInventoryService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ public class AppUserSignUpServiceJpaImpl implements AppUserSignUpService {
     public static final int EXPIRATION_TIME_MINUTE = 5;
 
     private final MyCharacterService myCharacterService;
+    private final MyInventoryService myInventoryService;
 
     @Transactional
     @Override
@@ -126,6 +128,7 @@ public class AppUserSignUpServiceJpaImpl implements AppUserSignUpService {
     @Override
     public void autoCreation(AppUser appUser) {
         myCharacterService.createMyCharacter(appUser);
+        myInventoryService.createMyInventory(appUser);
     }
 
     @Scheduled(fixedRate = SCHEDULE_TIME)

@@ -2,6 +2,7 @@ package com.example.tabi.appuser.entity;
 
 import com.example.tabi.member.entity.Member;
 import com.example.tabi.mycharacter.entity.MyCharacter;
+import com.example.tabi.myinventory.entity.MyInventory;
 import com.example.tabi.myprofile.entity.MyProfile;
 import com.example.tabi.treasurehunt.mytreasurehunt.entity.MyTreasureHunt;
 import com.example.tabi.treasurehunt.mytreasurehuntplay.entity.MyTreasureHuntPlay;
@@ -40,6 +41,8 @@ public class AppUser {
     private MyProfile myProfile;
     @OneToOne(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private MyCharacter myCharacter;
+    @OneToOne(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private MyInventory myInventory;
 
 
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)

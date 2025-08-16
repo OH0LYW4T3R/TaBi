@@ -91,7 +91,7 @@ public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
         TreasureHuntLocation treasureHuntLocation = treasureHuntLocationService.createTreasureHuntLocation(treasureHuntPost, treasureHuntPostRequest.getLatitude(), treasureHuntPostRequest.getLongitude(), treasureHuntPostRequest.getAltitude());
         treasureHuntPost.setTreasureHuntStartLocation(treasureHuntLocation);
 
-        Reward reward = rewardService.createReword(false);
+        Reward reward = rewardService.createReward(false);
         treasureHuntPost.setReward(reward);
         PostCounter postCounter = postCounterService.createPostCounter();
         treasureHuntPost.setPostCounter(postCounter);

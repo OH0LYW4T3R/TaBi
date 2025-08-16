@@ -8,7 +8,7 @@ public class RewardConfig {
     public static final int QUEST_COIN = 2;
 
     public static final int TREASURE_HUNT_EXPERIENCE = 1;
-    public static final boolean TREASURE_HUNT_TYPE = true;
+    public static final boolean TREASURE_HUNT_TYPE = false;
     public static final int TREASURE_HUNT_CREDIT_CARD_COUNT = 1;
     public static final int TREASURE_HUNT_COIN = 2;
 }

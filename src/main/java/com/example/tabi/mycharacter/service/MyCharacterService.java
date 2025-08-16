@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface MyCharacterService {
-    MyCharacterDto createMyCharacter(AppUser appUser);
+    void createMyCharacter(AppUser appUser);
     void addMyCharacter(Set<Character> myCharacters, List<Character> addCharacters);
 
     MyCharacterDto getMyCharacter(Authentication authentication);

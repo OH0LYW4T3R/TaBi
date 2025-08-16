@@ -4,6 +4,7 @@ import com.example.tabi.appuser.entity.AppUser;
 import com.example.tabi.appuser.repository.AppUserRepository;
 import com.example.tabi.appuser.service.AppUserServiceJpaImpl;
 import com.example.tabi.member.repository.MemberRepository;
+import com.example.tabi.reward.service.RewardService;
 import com.example.tabi.treasurehunt.mytreasurehunt.PostStatus;
 import com.example.tabi.treasurehunt.mytreasurehunt.entity.MyTreasureHunt;
 import com.example.tabi.treasurehunt.mytreasurehunt.repository.MyTreasureHuntRepository;
@@ -32,12 +33,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MyTreasureHuntPlayServiceJpaImpl implements MyTreasureHuntPlayService {
     private static final double BASE_RADIUS_KM = 1.0;
-    private static final double SUCCESS_RADIUS_KM = 0.0015; // 1.5m
+    private static final double SUCCESS_RADIUS_KM = 0.0015;
+    // 1.5m
     private final AppUserRepository appUserRepository;
     private final MemberRepository memberRepository;
     private final MyTreasureHuntPlayRepository myTreasureHuntPlayRepository;
     private final MyTreasureHuntRepository myTreasureHuntRepository;
     private final TreasureHuntPostRepository treasureHuntPostRepository;
+
+    private final RewardService rewardService;
 
     @Override
     @Transactional
@@ -134,6 +138,8 @@ public class MyTreasureHuntPlayServiceJpaImpl implements MyTreasureHuntPlayServi
 
                 myTreasureHuntPlay.setPlayStatus(PlayStatus.CLEARED);
                 myTreasureHuntPlayRepository.save(myTreasureHuntPlay);
+
+                rewardService.addReward(appUser, treasureHuntPost.getReward());
 
                 return myTreasureHuntPlayToMyTreasureHuntPlayDto(myTreasureHuntPlay);
 
