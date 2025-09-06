@@ -42,6 +42,8 @@ jobs:
                   value: ${{ secrets.GMAIL_EMAIL }}
                 - name: APP_PASSWORD
                   value: ${{ secrets.APP_PASSWORD }}
+                - name: GOOGLE_MAP_API_KEY
+                  value: ${{ secrets.GOOGLE_MAP_API_KEY }}
               buildenv: []
             context:
               git:
