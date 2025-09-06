@@ -5,7 +5,7 @@ import com.example.tabi.appuser.repository.AppUserRepository;
 import com.example.tabi.appuser.service.AppUserServiceJpaImpl;
 import com.example.tabi.member.repository.MemberRepository;
 import com.example.tabi.postcounter.entity.PostCounter;
-import com.example.tabi.treasurehunt.mytreasurehunt.PostStatus;
+import com.example.tabi.util.PostStatus;
 import com.example.tabi.treasurehunt.mytreasurehunt.entity.MyTreasureHunt;
 import com.example.tabi.treasurehunt.mytreasurehunt.repository.MyTreasureHuntRepository;
 import com.example.tabi.treasurehunt.mytreasurehunt.vo.MyTreasureHuntDto;

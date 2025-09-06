@@ -1,8 +1,6 @@
 package com.example.tabi.treasurehunt.treasurehuntpost.service;
 
-import com.example.tabi.treasurehunt.mytreasurehuntplay.PlayStatus;
 import com.example.tabi.treasurehunt.mytreasurehuntplay.vo.PositionRequest;
-import com.example.tabi.treasurehunt.treasurehuntpost.entity.TreasureHuntPost;
 import com.example.tabi.treasurehunt.treasurehuntpost.vo.TreasureHuntPostDto;
 import com.example.tabi.treasurehunt.treasurehuntpost.vo.TreasureHuntPostRequest;
 import org.springframework.security.core.Authentication;

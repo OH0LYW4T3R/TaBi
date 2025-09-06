@@ -1,10 +1,9 @@
 package com.example.tabi.treasurehunt.mytreasurehuntplay.controller;
 
-import com.example.tabi.treasurehunt.mytreasurehuntplay.PlayStatus;
+import com.example.tabi.util.PlayStatus;
 import com.example.tabi.treasurehunt.mytreasurehuntplay.service.MyTreasureHuntPlayService;
 import com.example.tabi.treasurehunt.mytreasurehuntplay.vo.MyTreasureHuntPlayDto;
 import com.example.tabi.treasurehunt.mytreasurehuntplay.vo.PositionRequest;
-import com.example.tabi.treasurehunt.treasurehuntpost.vo.TreasureHuntPostDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -252,5 +251,37 @@ public class MyTreasureHuntPlayController {
             return ResponseEntity.badRequest().body(result);
 
         return ResponseEntity.ok(result);
+    }
+
+    @Operation(
+            summary = "'Available' 상태의 보물찾기 플레이 삭제",
+            description = "사용자가 저장한 보물찾기 중 'AVAILABLE'(진행 가능) 상태인 항목을 ID를 통해 삭제<br>1km 내에 벗어났다면 해당 api를 통해 벗어난 TreasureHuntPlay 객체 Id를 포함시켜 보내 삭제 요청",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "삭제 성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = String.class, example = "deletion available")
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "삭제 실패",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = String.class, example = "None id or not in Available state.")
+                            )
+                    )
+            }
+    )
+    @DeleteMapping("/deletion/available/{id}")
+    public ResponseEntity<?> deletionAvailableTreasureHuntPlay(Authentication authentication, @PathVariable Long id) {
+        Boolean check = myTreasureHuntPlayService.deleteAvailableMyTreasureHuntPlay(authentication, id);
+
+        if (check)
+            return ResponseEntity.ok("deletion available");
+
+        return ResponseEntity.badRequest().body("None id or not in Available state.");
     }
 }

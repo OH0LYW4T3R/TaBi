@@ -5,19 +5,16 @@ import com.example.tabi.appuser.repository.AppUserRepository;
 import com.example.tabi.appuser.service.AppUserServiceJpaImpl;
 import com.example.tabi.member.repository.MemberRepository;
 import com.example.tabi.reward.service.RewardService;
-import com.example.tabi.treasurehunt.mytreasurehunt.PostStatus;
+import com.example.tabi.util.PostStatus;
 import com.example.tabi.treasurehunt.mytreasurehunt.entity.MyTreasureHunt;
 import com.example.tabi.treasurehunt.mytreasurehunt.repository.MyTreasureHuntRepository;
-import com.example.tabi.treasurehunt.mytreasurehunt.service.MyTreasureHuntServiceJpaImpl;
-import com.example.tabi.treasurehunt.mytreasurehuntplay.PlayStatus;
+import com.example.tabi.util.PlayStatus;
 import com.example.tabi.treasurehunt.mytreasurehuntplay.entity.MyTreasureHuntPlay;
 import com.example.tabi.treasurehunt.mytreasurehuntplay.repository.MyTreasureHuntPlayRepository;
 import com.example.tabi.treasurehunt.mytreasurehuntplay.vo.MyTreasureHuntPlayDto;
 import com.example.tabi.treasurehunt.mytreasurehuntplay.vo.PositionRequest;
 import com.example.tabi.treasurehunt.treasurehuntpost.entity.TreasureHuntPost;
 import com.example.tabi.treasurehunt.treasurehuntpost.repository.TreasureHuntPostRepository;
-import com.example.tabi.treasurehunt.treasurehuntpost.service.TreasureHuntPostServiceJpaImpl;
-import com.example.tabi.treasurehunt.treasurehuntpost.vo.TreasureHuntPostDto;
 import com.example.tabi.util.GeoUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -202,6 +199,29 @@ public class MyTreasureHuntPlayServiceJpaImpl implements MyTreasureHuntPlayServi
             default:
                 return null;
         }
+    }
+
+    @Override
+    @Transactional
+    public Boolean deleteAvailableMyTreasureHuntPlay(Authentication authentication, Long id) {
+        Optional<AppUser> optionalAppUser = AppUserServiceJpaImpl.authenticationToAppUser(authentication, memberRepository, appUserRepository);
+
+        if (optionalAppUser.isEmpty())
+            return false;
+
+        Optional<MyTreasureHuntPlay> myTreasureHuntPlayOptional = myTreasureHuntPlayRepository.findById(id);
+
+        if (myTreasureHuntPlayOptional.isEmpty())
+            return false;
+
+        MyTreasureHuntPlay myTreasureHuntPlay = myTreasureHuntPlayOptional.get();
+
+        if (!myTreasureHuntPlay.getPlayStatus().equals(PlayStatus.AVAILABLE))
+            return false;
+
+        myTreasureHuntPlayRepository.delete(myTreasureHuntPlay);
+
+        return true;
     }
 
     public static MyTreasureHuntPlayDto myTreasureHuntPlayToMyTreasureHuntPlayDto(MyTreasureHuntPlay play) {

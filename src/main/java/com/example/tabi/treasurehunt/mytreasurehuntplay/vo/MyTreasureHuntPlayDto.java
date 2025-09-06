@@ -1,6 +1,6 @@
 package com.example.tabi.treasurehunt.mytreasurehuntplay.vo;
 
-import com.example.tabi.treasurehunt.mytreasurehuntplay.PlayStatus;
+import com.example.tabi.util.PlayStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

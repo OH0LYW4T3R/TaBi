@@ -11,6 +11,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -48,10 +49,10 @@ public class TreasureHuntPost {
 
     // 참여 기록 (MyTreasureHunt)
     @OneToMany(mappedBy = "treasureHuntPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MyTreasureHunt> myTreasureHunts;
+    private List<MyTreasureHunt> myTreasureHunts = new ArrayList<>();
 
     @OneToMany(mappedBy = "treasureHuntPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TreasureHuntPostComment> treasureHuntPostComments;
+    private List<TreasureHuntPostComment> treasureHuntPostComments = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;

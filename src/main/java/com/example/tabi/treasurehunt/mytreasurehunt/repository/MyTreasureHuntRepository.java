@@ -1,7 +1,7 @@
 package com.example.tabi.treasurehunt.mytreasurehunt.repository;
 
 import com.example.tabi.appuser.entity.AppUser;
-import com.example.tabi.treasurehunt.mytreasurehunt.PostStatus;
+import com.example.tabi.util.PostStatus;
 import com.example.tabi.treasurehunt.mytreasurehunt.entity.MyTreasureHunt;
 import com.example.tabi.treasurehunt.treasurehuntpost.entity.TreasureHuntPost;
 import org.springframework.data.jpa.repository.JpaRepository;

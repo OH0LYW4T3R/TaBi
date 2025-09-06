@@ -1,29 +1,31 @@
-package com.example.tabi.treasurehunt.mytreasurehunt.entity;
+package com.example.tabi.quest.myquest.entity;
 
 import com.example.tabi.appuser.entity.AppUser;
+import com.example.tabi.postcounter.entity.PostCounter;
+import com.example.tabi.quest.questpost.entity.QuestPost;
+import com.example.tabi.reward.entity.Reward;
 import com.example.tabi.util.PostStatus;
-import com.example.tabi.treasurehunt.treasurehuntpost.entity.TreasureHuntPost;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedBy;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Data
-public class MyTreasureHunt {
+public class MyQuest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long myTreasureHuntId;
+    private Long myQuestId;
 
     @ManyToOne
     @JoinColumn(name = "app_user_id")
     private AppUser appUser;
 
-    // 양방향 구성 (포스트 작성시 내가 쓴 포스트는 MyTreasureHunt를 생성해줘야함.)
     @ManyToOne
-    @JoinColumn(name = "treasure_hunt_post_id")
-    private TreasureHuntPost treasureHuntPost;
+    @JoinColumn(name = "quest_post_id")
+    private QuestPost questPost;
 
     @Enumerated(EnumType.STRING)
     private PostStatus status;

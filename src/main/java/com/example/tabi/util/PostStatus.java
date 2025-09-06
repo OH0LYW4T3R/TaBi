@@ -1,4 +1,4 @@
-package com.example.tabi.treasurehunt.mytreasurehunt;
+package com.example.tabi.util;
 
 public enum PostStatus {
     CREATED,
