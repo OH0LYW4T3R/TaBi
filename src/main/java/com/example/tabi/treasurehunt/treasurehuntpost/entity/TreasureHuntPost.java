@@ -5,7 +5,7 @@ import com.example.tabi.reward.entity.Reward;
 import com.example.tabi.treasurehunt.mytreasurehunt.entity.MyTreasureHunt;
 import com.example.tabi.treasurehunt.treasurehuntpostImage.entity.TreasureHuntPostImage;
 import com.example.tabi.treasurehunt.treasurehuntpostcomment.entity.TreasureHuntPostComment;
-import com.example.tabi.treasurehunt.treasurehuntstartlocation.entity.TreasureHuntLocation;
+import com.example.tabi.treasurehunt.treasurehuntstartlocation.entity.TreasureHuntStartLocation;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -45,7 +45,7 @@ public class TreasureHuntPost {
     private TreasureHuntPostImage treasureHuntPostImages;
 
     @OneToOne(mappedBy = "treasureHuntPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private TreasureHuntLocation treasureHuntStartLocation;
+    private TreasureHuntStartLocation treasureHuntStartLocation;
 
     // 참여 기록 (MyTreasureHunt)
     @OneToMany(mappedBy = "treasureHuntPost", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TreasureHuntLocationDto {
-    private Long treasureHuntLocationId;
+public class TreasureHuntStartLocationDto {
+    private Long treasureHuntStartLocationId;
     private String indicateLocation;
     private double latitude;
     private double longitude;
