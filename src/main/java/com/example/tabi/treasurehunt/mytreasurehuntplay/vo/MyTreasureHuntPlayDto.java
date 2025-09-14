@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MyTreasureHuntPlayDto {
-    private Long myTreasureHuntId;
+    private Long myTreasureHuntPlayId;
     private Long appUserId;
     private Long treasureHuntPostId;
     private PlayStatus playStatus;
