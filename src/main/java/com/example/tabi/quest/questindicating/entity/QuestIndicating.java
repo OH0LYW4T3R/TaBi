@@ -1,6 +1,6 @@
 package com.example.tabi.quest.questindicating.entity;
 
-import com.example.tabi.quest.questlogic.entity.QuestLogic;
+import com.example.tabi.quest.questlogic.entity.QuestStep;
 import com.example.tabi.quest.questrunninglocation.entity.QuestRunningLocation;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class QuestIndicating {
     boolean walkingAction;
 
     @OneToMany(mappedBy = "questIndicating", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<QuestLogic> questLogics;
+    private List<QuestStep> questSteps; // 퀘스트의 순서가 담김
 
     // 관계의 주인
     @OneToOne
