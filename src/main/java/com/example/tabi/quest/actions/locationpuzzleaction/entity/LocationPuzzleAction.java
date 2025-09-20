@@ -21,9 +21,9 @@ public class LocationPuzzleAction extends Action {
     private Hint hint;
 
     private String actualLocation;
-    private double latitude;
-    private double longitude;
-    private double altitude;
+    private Double latitude;
+    private Double longitude;
+    private Double altitude;
 
     @Override
     public LocationPuzzleActionDto actionToActionDto() {

@@ -1,8 +1,7 @@
 package com.example.tabi.quest.actions.action.entity;
 
-import com.example.tabi.quest.actions.ActionType;
 import com.example.tabi.quest.actions.action.vo.ActionDto;
-import com.example.tabi.quest.questlogic.entity.QuestStep;
+import com.example.tabi.quest.queststep.entity.QuestStep;
 import jakarta.persistence.*;
 import lombok.Data;
 

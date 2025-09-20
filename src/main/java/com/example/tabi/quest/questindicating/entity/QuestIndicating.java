@@ -1,6 +1,6 @@
 package com.example.tabi.quest.questindicating.entity;
 
-import com.example.tabi.quest.questlogic.entity.QuestStep;
+import com.example.tabi.quest.queststep.entity.QuestStep;
 import com.example.tabi.quest.questrunninglocation.entity.QuestRunningLocation;
 import jakarta.persistence.*;
 import lombok.Data;
