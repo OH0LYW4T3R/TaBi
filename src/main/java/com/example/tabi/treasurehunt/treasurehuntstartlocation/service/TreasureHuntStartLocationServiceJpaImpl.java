@@ -1,17 +1,15 @@
 package com.example.tabi.treasurehunt.treasurehuntstartlocation.service;
 
 import com.example.tabi.treasurehunt.treasurehuntpost.entity.TreasureHuntPost;
-import com.example.tabi.treasurehunt.treasurehuntpostImage.service.TreasureHuntPostImageService;
-import com.example.tabi.treasurehunt.treasurehuntstartlocation.entity.TreasureHuntLocation;
-import com.example.tabi.treasurehunt.treasurehuntstartlocation.repository.TreasureHuntLocationRepository;
-import com.example.tabi.treasurehunt.treasurehuntstartlocation.vo.TreasureHuntLocationDto;
+import com.example.tabi.treasurehunt.treasurehuntstartlocation.entity.TreasureHuntStartLocation;
+import com.example.tabi.treasurehunt.treasurehuntstartlocation.repository.TreasureHuntStartLocationRepository;
+import com.example.tabi.treasurehunt.treasurehuntstartlocation.vo.TreasureHuntStartLocationDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -23,8 +21,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TreasureHuntLocationServiceJpaImpl implements TreasureHuntLocationService {
-    private final TreasureHuntLocationRepository treasureHuntLocationRepository;
+public class TreasureHuntStartLocationServiceJpaImpl implements TreasureHuntStartLocationService {
+    private final TreasureHuntStartLocationRepository treasureHuntStartLocationRepository;
     private final RestTemplate restTemplate;
     @Value("${google.maps.api.key}")
     private String GOOGLE_MAP_API_KEY;
@@ -32,18 +30,18 @@ public class TreasureHuntLocationServiceJpaImpl implements TreasureHuntLocationS
 
     @Override
     @Transactional
-    public TreasureHuntLocation createTreasureHuntLocation(TreasureHuntPost treasureHuntPost, double latitude, double longitude, double altitude) {
-        TreasureHuntLocation treasureHuntLocation = new TreasureHuntLocation();
+    public TreasureHuntStartLocation createTreasureHuntStartLocation(TreasureHuntPost treasureHuntPost, double latitude, double longitude, double altitude) {
+        TreasureHuntStartLocation treasureHuntStartLocation = new TreasureHuntStartLocation();
         String address = getAddressUsingGoogleMap(latitude, longitude);
-        treasureHuntLocation.setActualLocation(address);
-        treasureHuntLocation.setIndicateLocation(getIndicatingAddress(address));
-        treasureHuntLocation.setLatitude(latitude);
-        treasureHuntLocation.setLongitude(longitude);
-        treasureHuntLocation.setAltitude(altitude);
-        treasureHuntLocation.setTreasureHuntPost(treasureHuntPost);
-        treasureHuntLocationRepository.save(treasureHuntLocation);
+        treasureHuntStartLocation.setActualLocation(address);
+        treasureHuntStartLocation.setIndicateLocation(getIndicatingAddress(address));
+        treasureHuntStartLocation.setLatitude(latitude);
+        treasureHuntStartLocation.setLongitude(longitude);
+        treasureHuntStartLocation.setAltitude(altitude);
+        treasureHuntStartLocation.setTreasureHuntPost(treasureHuntPost);
+        treasureHuntStartLocationRepository.save(treasureHuntStartLocation);
 
-        return treasureHuntLocation;
+        return treasureHuntStartLocation;
     }
 
     public String getAddressUsingGoogleMap(double lat, double lng) {
@@ -111,11 +109,11 @@ public class TreasureHuntLocationServiceJpaImpl implements TreasureHuntLocationS
         }
     }
 
-    public static TreasureHuntLocationDto treasureHuntLocationToTreasureHuntLocationDto(TreasureHuntLocation entity) {
+    public static TreasureHuntStartLocationDto treasureHuntStartLocationToTreasureHuntStartLocationDto(TreasureHuntStartLocation entity) {
         if (entity == null) return null;
 
-        return new TreasureHuntLocationDto(
-                entity.getTreasureHuntLocationId(),
+        return new TreasureHuntStartLocationDto(
+                entity.getTreasureHuntStartLocationId(),
                 entity.getIndicateLocation(),
                 entity.getLatitude(),
                 entity.getLongitude(),

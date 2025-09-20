@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Entity
 @Data
-public class TreasureHuntLocation {
+public class TreasureHuntStartLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long treasureHuntLocationId;
+    private Long treasureHuntStartLocationId;
 
     private String actualLocation;   // 서버용
     private String indicateLocation; // 사용자용

@@ -1,0 +1,107 @@
+package com.example.tabi.quest.actions.photopuzzleaction.service;
+
+import com.example.tabi.quest.actions.hint.entity.Hint;
+import com.example.tabi.quest.actions.hint.service.HintService;
+import com.example.tabi.quest.actions.hint.vo.HintRequest;
+import com.example.tabi.quest.actions.photopuzzleaction.entity.PhotoKeyword;
+import com.example.tabi.quest.actions.photopuzzleaction.entity.PhotoPuzzleAction;
+import com.example.tabi.quest.actions.photopuzzleaction.repository.PhotoKeywordRepository;
+import com.example.tabi.quest.actions.photopuzzleaction.repository.PhotoPuzzleActionRepository;
+import com.example.tabi.quest.actions.photopuzzleaction.vo.PhotoKeywordRequest;
+import com.example.tabi.quest.actions.photopuzzleaction.vo.PhotoPuzzleActionDto;
+import com.example.tabi.quest.actions.photopuzzleaction.vo.PhotoPuzzleActionRequest;
+import com.example.tabi.quest.actions.stayingaction.service.StayingActionService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class PhotoPuzzleActionServiceJpaImpl implements PhotoPuzzleActionService {
+    private final PhotoPuzzleActionRepository photoPuzzleActionRepository;
+    private final PhotoKeywordRepository photoKeywordRepository;
+    private final HintService hintService;
+
+    @Override
+    @Transactional
+    public PhotoPuzzleActionDto createPhotoPuzzleAction(PhotoPuzzleActionRequest photoPuzzleActionRequest, HintRequest hintRequest) {
+        PhotoPuzzleAction photoPuzzleAction = new PhotoPuzzleAction();
+
+        photoPuzzleAction.setCharacterImageUrl(photoPuzzleActionRequest.getCharacterImageUrl());
+        photoPuzzleAction.setQuestStep(photoPuzzleActionRequest.getQuestStep());
+        photoPuzzleActionRepository.save(photoPuzzleAction);
+
+        for (PhotoKeywordRequest photoKeywordRequest : photoPuzzleActionRequest.getPhotoKeywordRequests()) {
+            PhotoKeyword photoKeyword = new PhotoKeyword();
+            photoKeyword.setKeyword(photoKeywordRequest.getKeyword());
+            photoKeyword.setPhotoPuzzleAction(photoPuzzleAction);
+            photoKeywordRepository.save(photoKeyword);
+
+            photoPuzzleAction.getPhotoKeywords().add(photoKeyword);
+        }
+
+        photoPuzzleAction.setHint(hintService.createHint(hintRequest));
+
+        photoPuzzleActionRepository.save(photoPuzzleAction);
+
+        return photoPuzzleAction.actionToActionDto();
+    }
+
+    @Override
+    public PhotoPuzzleActionDto retrievePhotoPuzzleAction(Long photoPuzzleActionId) {
+        Optional<PhotoPuzzleAction> photoPuzzleActionOptional = photoPuzzleActionRepository.findById(photoPuzzleActionId);
+        if (photoPuzzleActionOptional.isEmpty()) return null;
+
+        PhotoPuzzleAction photoPuzzleAction = photoPuzzleActionOptional.get();
+        return photoPuzzleAction.actionToActionDto();
+    }
+
+    @Override
+    @Transactional
+    public PhotoPuzzleActionDto updatePhotoPuzzleAction(Long photoPuzzleActionId, PhotoPuzzleActionRequest photoPuzzleActionRequest, HintRequest hintRequest) {
+        Optional<PhotoPuzzleAction> photoPuzzleActionOptional = photoPuzzleActionRepository.findById(photoPuzzleActionId);
+        if (photoPuzzleActionOptional.isEmpty()) return null;
+
+        PhotoPuzzleAction photoPuzzleAction = photoPuzzleActionOptional.get();
+
+        if (photoPuzzleActionRequest.getCharacterImageUrl() != null)
+            photoPuzzleAction.setCharacterImageUrl(photoPuzzleActionRequest.getCharacterImageUrl());
+
+        if (photoPuzzleActionRequest.getQuestStep() != null)
+            photoPuzzleAction.setQuestStep(photoPuzzleActionRequest.getQuestStep());
+
+        if (photoPuzzleActionRequest.getPhotoKeywordRequests() != null) {
+            if (photoPuzzleAction.getPhotoKeywords() != null && !photoPuzzleAction.getPhotoKeywords().isEmpty()) {
+                for (PhotoKeyword photoKeyword : photoPuzzleAction.getPhotoKeywords()) {
+                    photoKeywordRepository.delete(photoKeyword);
+                    photoPuzzleAction.getPhotoKeywords().remove(photoKeyword);
+                }
+            }
+
+            for (PhotoKeywordRequest photoKeywordRequest : photoPuzzleActionRequest.getPhotoKeywordRequests()) {
+                PhotoKeyword photoKeyword = new PhotoKeyword();
+                photoKeyword.setKeyword(photoKeywordRequest.getKeyword());
+                photoKeyword.setPhotoPuzzleAction(photoPuzzleAction);
+                photoKeywordRepository.save(photoKeyword);
+
+                photoPuzzleAction.getPhotoKeywords().add(photoKeyword);
+            }
+        }
+
+
+        if (hintRequest != null) {
+            photoPuzzleAction.setHint(hintService.updateHint(photoPuzzleAction.getHint().getHintId(), hintRequest)); // 반환 타입이 DTO면 엔티티로 맞추도록 조정 필요
+        }
+
+        photoPuzzleActionRepository.save(photoPuzzleAction);
+        return photoPuzzleAction.actionToActionDto();
+    }
+
+    @Override
+    @Transactional
+    public void deletePhotoPuzzleAction(Long photoPuzzleActionId) {
+        photoPuzzleActionRepository.deleteById(photoPuzzleActionId);
+    }
+}

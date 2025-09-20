@@ -27,6 +27,8 @@ public class MyQuestPlay {
 
     private PlayStatus playStatus;
 
+    //힌트 해금여부 저장하는 클래스..
+
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp

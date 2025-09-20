@@ -22,9 +22,9 @@ import com.example.tabi.treasurehunt.treasurehuntpost.vo.TreasureHuntPostRequest
 import com.example.tabi.treasurehunt.treasurehuntpostImage.entity.TreasureHuntPostImage;
 import com.example.tabi.treasurehunt.treasurehuntpostImage.service.TreasureHuntPostImageService;
 import com.example.tabi.treasurehunt.treasurehuntpostImage.service.TreasureHuntPostImageServiceJpaImpl;
-import com.example.tabi.treasurehunt.treasurehuntstartlocation.entity.TreasureHuntLocation;
-import com.example.tabi.treasurehunt.treasurehuntstartlocation.service.TreasureHuntLocationService;
-import com.example.tabi.treasurehunt.treasurehuntstartlocation.service.TreasureHuntLocationServiceJpaImpl;
+import com.example.tabi.treasurehunt.treasurehuntstartlocation.entity.TreasureHuntStartLocation;
+import com.example.tabi.treasurehunt.treasurehuntstartlocation.service.TreasureHuntStartLocationService;
+import com.example.tabi.treasurehunt.treasurehuntstartlocation.service.TreasureHuntStartLocationServiceJpaImpl;
 import com.example.tabi.util.FileUploadUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ import java.util.Optional;
 public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
     private final TreasureHuntPostRepository treasureHuntPostRepository;
     private final TreasureHuntPostImageService treasureHuntPostImageService;
-    private final TreasureHuntLocationService treasureHuntLocationService;
+    private final TreasureHuntStartLocationService treasureHuntStartLocationService;
     private final MyTreasureHuntRepository myTreasureHuntRepository;
     private final MyTreasureHuntService myTreasureHuntService;
     private final RewardService rewardService;
@@ -83,8 +83,8 @@ public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
 
         TreasureHuntPostImage treasureHuntPostImage = treasureHuntPostImageService.createTreasureHuntPostImage(treasureHuntPost, saveImageUrl);
         treasureHuntPost.setTreasureHuntPostImages(treasureHuntPostImage);
-        TreasureHuntLocation treasureHuntLocation = treasureHuntLocationService.createTreasureHuntLocation(treasureHuntPost, treasureHuntPostRequest.getLatitude(), treasureHuntPostRequest.getLongitude(), treasureHuntPostRequest.getAltitude());
-        treasureHuntPost.setTreasureHuntStartLocation(treasureHuntLocation);
+        TreasureHuntStartLocation treasureHuntStartLocation = treasureHuntStartLocationService.createTreasureHuntStartLocation(treasureHuntPost, treasureHuntPostRequest.getLatitude(), treasureHuntPostRequest.getLongitude(), treasureHuntPostRequest.getAltitude());
+        treasureHuntPost.setTreasureHuntStartLocation(treasureHuntStartLocation);
 
         Reward reward = rewardService.createReward(false);
         treasureHuntPost.setReward(reward);
@@ -100,7 +100,7 @@ public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
                 treasureHuntPost,
                 postCounter,
                 reward,
-                treasureHuntLocation,
+                treasureHuntStartLocation,
                 treasureHuntPostImage
         );
     }
@@ -173,7 +173,7 @@ public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
        return "success";
     }
 
-    public static TreasureHuntPostDto treasureHuntPostToTreasureHuntPostDto(TreasureHuntPost post, PostCounter postCounter, Reward reward, TreasureHuntLocation treasureHuntLocation, TreasureHuntPostImage treasureHuntPostImage) {
+    public static TreasureHuntPostDto treasureHuntPostToTreasureHuntPostDto(TreasureHuntPost post, PostCounter postCounter, Reward reward, TreasureHuntStartLocation treasureHuntStartLocation, TreasureHuntPostImage treasureHuntPostImage) {
         return new TreasureHuntPostDto(
                 post.getTreasureHuntPostId(),
                 post.getUploadUserName(),
@@ -185,7 +185,7 @@ public class TreasureHuntPostServiceJpaImpl implements TreasureHuntPostService {
                 post.isPub(),
                 PostCounterServiceJpaImpl.postCounterToPostCounterDto(postCounter),
                 RewardServiceJpaImpl.rewardToRewardDto(reward),
-                TreasureHuntLocationServiceJpaImpl.treasureHuntLocationToTreasureHuntLocationDto(treasureHuntLocation),
+                TreasureHuntStartLocationServiceJpaImpl.treasureHuntStartLocationToTreasureHuntStartLocationDto(treasureHuntStartLocation),
                 TreasureHuntPostImageServiceJpaImpl.treasureHuntPostImageToTreasureHuntPostImageDto(treasureHuntPostImage),
                 post.getCreatedAt()
         );
