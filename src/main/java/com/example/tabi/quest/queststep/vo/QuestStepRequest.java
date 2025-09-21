@@ -39,4 +39,9 @@ public class QuestStepRequest {
 
     //Input Puzzle Action
     private String answerString;
+
+    // If Puzzle Action
+    private String hintOne;
+    private String hintTwo;
+    private String hintThree;
 }

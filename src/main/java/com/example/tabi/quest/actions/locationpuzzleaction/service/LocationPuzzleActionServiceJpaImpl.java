@@ -20,7 +20,7 @@ public class LocationPuzzleActionServiceJpaImpl implements LocationPuzzleActionS
 
     @Override
     @Transactional
-    public LocationPuzzleActionDto createLocationPuzzleAction(LocationPuzzleActionRequest locationPuzzleActionRequest, HintRequest hintRequest) {
+    public LocationPuzzleAction createLocationPuzzleAction(LocationPuzzleActionRequest locationPuzzleActionRequest, HintRequest hintRequest) {
         LocationPuzzleAction locationPuzzleAction = new LocationPuzzleAction();
 
         locationPuzzleAction.setLocationName(locationPuzzleActionRequest.getLocationName());
@@ -36,21 +36,19 @@ public class LocationPuzzleActionServiceJpaImpl implements LocationPuzzleActionS
 
         locationPuzzleActionRepository.save(locationPuzzleAction);
 
-        return locationPuzzleAction.actionToActionDto();
+        return locationPuzzleAction;
     }
 
     @Override
-    public LocationPuzzleActionDto retrieveLocationPuzzleAction(Long locationPuzzleActionId) {
+    public LocationPuzzleAction retrieveLocationPuzzleAction(Long locationPuzzleActionId) {
         Optional<LocationPuzzleAction> locationPuzzleActionOptional = locationPuzzleActionRepository.findById(locationPuzzleActionId);
-        if (locationPuzzleActionOptional.isEmpty()) return null;
 
-        LocationPuzzleAction locationPuzzleAction = locationPuzzleActionOptional.get();
-        return locationPuzzleAction.actionToActionDto();
+        return locationPuzzleActionOptional.orElse(null);
     }
 
     @Override
     @Transactional
-    public LocationPuzzleActionDto updateLocationPuzzleAction(Long locationPuzzleActionId, LocationPuzzleActionRequest locationPuzzleActionRequest, HintRequest hintRequest) {
+    public LocationPuzzleAction updateLocationPuzzleAction(Long locationPuzzleActionId, LocationPuzzleActionRequest locationPuzzleActionRequest, HintRequest hintRequest) {
         Optional<LocationPuzzleAction> locationPuzzleActionOptional = locationPuzzleActionRepository.findById(locationPuzzleActionId);
         if (locationPuzzleActionOptional.isEmpty()) return null;
 
@@ -82,7 +80,7 @@ public class LocationPuzzleActionServiceJpaImpl implements LocationPuzzleActionS
 
         locationPuzzleActionRepository.save(locationPuzzleAction);
 
-        return locationPuzzleAction.actionToActionDto();
+        return locationPuzzleAction;
     }
 
     @Override
@@ -91,3 +89,4 @@ public class LocationPuzzleActionServiceJpaImpl implements LocationPuzzleActionS
         locationPuzzleActionRepository.deleteById(locationPuzzleActionId);
     }
 }
+

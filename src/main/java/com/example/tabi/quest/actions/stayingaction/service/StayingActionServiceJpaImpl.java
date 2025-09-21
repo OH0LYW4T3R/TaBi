@@ -17,7 +17,7 @@ public class StayingActionServiceJpaImpl implements StayingActionService {
 
     @Override
     @Transactional
-    public StayingActionDto createStayingAction(StayingActionRequest stayingActionRequest) {
+    public StayingAction createStayingAction(StayingActionRequest stayingActionRequest) {
         StayingAction stayingAction = new StayingAction();
 
         stayingAction.setDay(stayingActionRequest.getDay());
@@ -28,21 +28,19 @@ public class StayingActionServiceJpaImpl implements StayingActionService {
 
         stayingActionRepository.save(stayingAction);
 
-        return stayingAction.actionToActionDto();
+        return stayingAction;
     }
 
     @Override
-    public StayingActionDto retrieveStayingAction(Long stayingActionId) {
+    public StayingAction retrieveStayingAction(Long stayingActionId) {
         Optional<StayingAction> stayingActionOptional = stayingActionRepository.findById(stayingActionId);
-        if (stayingActionOptional.isEmpty()) return null;
 
-        StayingAction stayingAction = stayingActionOptional.get();
-        return stayingAction.actionToActionDto();
+        return stayingActionOptional.orElse(null);
     }
 
     @Override
     @Transactional
-    public StayingActionDto updateStayingAction(Long stayingActionId, StayingActionRequest stayingActionRequest) {
+    public StayingAction updateStayingAction(Long stayingActionId, StayingActionRequest stayingActionRequest) {
         Optional<StayingAction> stayingActionOptional = stayingActionRepository.findById(stayingActionId);
         if (stayingActionOptional.isEmpty()) return null;
 
@@ -65,7 +63,7 @@ public class StayingActionServiceJpaImpl implements StayingActionService {
 
         stayingActionRepository.save(stayingAction);
 
-        return stayingAction.actionToActionDto();
+        return stayingAction;
     }
 
     @Override

@@ -20,7 +20,7 @@ public class InputPuzzleActionServiceJpaImpl implements InputPuzzleActionService
 
     @Override
     @Transactional
-    public InputPuzzleActionDto createInputPuzzleAction(InputPuzzleActionRequest inputPuzzleActionRequest, HintRequest hintRequest) {
+    public InputPuzzleAction createInputPuzzleAction(InputPuzzleActionRequest inputPuzzleActionRequest, HintRequest hintRequest) {
         InputPuzzleAction inputPuzzleAction = new InputPuzzleAction();
 
         inputPuzzleAction.setAnswerString(inputPuzzleActionRequest.getAnswerString());
@@ -32,21 +32,19 @@ public class InputPuzzleActionServiceJpaImpl implements InputPuzzleActionService
 
         inputPuzzleActionRepository.save(inputPuzzleAction);
 
-        return inputPuzzleAction.actionToActionDto();
+        return inputPuzzleAction;
     }
 
     @Override
-    public InputPuzzleActionDto retrieveInputPuzzleAction(Long inputPuzzleActionId) {
+    public InputPuzzleAction retrieveInputPuzzleAction(Long inputPuzzleActionId) {
         Optional<InputPuzzleAction> inputPuzzleActionOptional = inputPuzzleActionRepository.findById(inputPuzzleActionId);
-        if (inputPuzzleActionOptional.isEmpty()) return null;
 
-        InputPuzzleAction inputPuzzleAction = inputPuzzleActionOptional.get();
-        return inputPuzzleAction.actionToActionDto();
+        return inputPuzzleActionOptional.orElse(null);
     }
 
     @Override
     @Transactional
-    public InputPuzzleActionDto updateInputPuzzleAction(Long inputPuzzleActionId, InputPuzzleActionRequest inputPuzzleActionRequest, HintRequest hintRequest) {
+    public InputPuzzleAction updateInputPuzzleAction(Long inputPuzzleActionId, InputPuzzleActionRequest inputPuzzleActionRequest, HintRequest hintRequest) {
         Optional<InputPuzzleAction> inputPuzzleActionOptional = inputPuzzleActionRepository.findById(inputPuzzleActionId);
         if (inputPuzzleActionOptional.isEmpty()) return null;
 
@@ -62,11 +60,11 @@ public class InputPuzzleActionServiceJpaImpl implements InputPuzzleActionService
             inputPuzzleAction.setQuestStep(inputPuzzleActionRequest.getQuestStep());
 
         if (hintRequest != null)
-            inputPuzzleAction.setHint(hintService.createHint(hintRequest)); // 반환 타입 주의
+            inputPuzzleAction.setHint(hintService.createHint(hintRequest));
 
         inputPuzzleActionRepository.save(inputPuzzleAction);
 
-        return inputPuzzleAction.actionToActionDto();
+        return inputPuzzleAction;
     }
 
     @Override

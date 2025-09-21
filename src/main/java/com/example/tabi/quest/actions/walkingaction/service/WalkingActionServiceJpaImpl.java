@@ -17,7 +17,7 @@ public class WalkingActionServiceJpaImpl implements WalkingActionService {
 
     @Override
     @Transactional
-    public WalkingActionDto createWalkingAction(WalkingActionRequest walkingActionRequest) {
+    public WalkingAction createWalkingAction(WalkingActionRequest walkingActionRequest) {
         WalkingAction walkingAction = new WalkingAction();
 
         walkingAction.setWalkingCount(walkingActionRequest.getWalkingCount());
@@ -26,24 +26,19 @@ public class WalkingActionServiceJpaImpl implements WalkingActionService {
 
         walkingActionRepository.save(walkingAction);
 
-        return walkingAction.actionToActionDto();
+        return walkingAction;
     }
 
     @Override
-    public WalkingActionDto retrieveWalkingAction(Long walkingActionId) {
+    public WalkingAction retrieveWalkingAction(Long walkingActionId) {
         Optional<WalkingAction> optionalWalkingAction = walkingActionRepository.findById(walkingActionId);
 
-        if (optionalWalkingAction.isEmpty())
-            return null;
-
-        WalkingAction walkingAction = optionalWalkingAction.get();
-
-        return walkingAction.actionToActionDto();
+        return optionalWalkingAction.orElse(null);
     }
 
     @Override
     @Transactional
-    public WalkingActionDto updateWalkingAction(Long walkingActionId, WalkingActionRequest walkingActionRequest) {
+    public WalkingAction updateWalkingAction(Long walkingActionId, WalkingActionRequest walkingActionRequest) {
         Optional<WalkingAction> optionalWalkingAction = walkingActionRepository.findById(walkingActionId);
 
         if (optionalWalkingAction.isEmpty())
@@ -62,7 +57,7 @@ public class WalkingActionServiceJpaImpl implements WalkingActionService {
 
         walkingActionRepository.save(walkingAction);
 
-        return walkingAction.actionToActionDto();
+        return walkingAction;
     }
 
     @Override

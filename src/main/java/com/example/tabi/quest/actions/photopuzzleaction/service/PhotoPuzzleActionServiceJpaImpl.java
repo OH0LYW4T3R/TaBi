@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,14 +27,14 @@ public class PhotoPuzzleActionServiceJpaImpl implements PhotoPuzzleActionService
 
     @Override
     @Transactional
-    public PhotoPuzzleActionDto createPhotoPuzzleAction(PhotoPuzzleActionRequest photoPuzzleActionRequest, HintRequest hintRequest) {
+    public PhotoPuzzleAction createPhotoPuzzleAction(PhotoPuzzleActionRequest photoPuzzleActionRequest, HintRequest hintRequest) {
         PhotoPuzzleAction photoPuzzleAction = new PhotoPuzzleAction();
 
         photoPuzzleAction.setCharacterImageUrl(photoPuzzleActionRequest.getCharacterImageUrl());
         photoPuzzleAction.setQuestStep(photoPuzzleActionRequest.getQuestStep());
         photoPuzzleActionRepository.save(photoPuzzleAction);
 
-        for (PhotoKeywordRequest photoKeywordRequest : photoPuzzleActionRequest.getPhotoKeywordRequests()) {
+        for (PhotoKeywordRequest photoKeywordRequest : Objects.requireNonNullElse(photoPuzzleActionRequest.getPhotoKeywordRequests(), java.util.Collections.<PhotoKeywordRequest>emptyList())) {
             PhotoKeyword photoKeyword = new PhotoKeyword();
             photoKeyword.setKeyword(photoKeywordRequest.getKeyword());
             photoKeyword.setPhotoPuzzleAction(photoPuzzleAction);
@@ -46,21 +47,19 @@ public class PhotoPuzzleActionServiceJpaImpl implements PhotoPuzzleActionService
 
         photoPuzzleActionRepository.save(photoPuzzleAction);
 
-        return photoPuzzleAction.actionToActionDto();
+        return photoPuzzleAction;
     }
 
     @Override
-    public PhotoPuzzleActionDto retrievePhotoPuzzleAction(Long photoPuzzleActionId) {
+    public PhotoPuzzleAction retrievePhotoPuzzleAction(Long photoPuzzleActionId) {
         Optional<PhotoPuzzleAction> photoPuzzleActionOptional = photoPuzzleActionRepository.findById(photoPuzzleActionId);
-        if (photoPuzzleActionOptional.isEmpty()) return null;
+        return photoPuzzleActionOptional.orElse(null);
 
-        PhotoPuzzleAction photoPuzzleAction = photoPuzzleActionOptional.get();
-        return photoPuzzleAction.actionToActionDto();
     }
 
     @Override
     @Transactional
-    public PhotoPuzzleActionDto updatePhotoPuzzleAction(Long photoPuzzleActionId, PhotoPuzzleActionRequest photoPuzzleActionRequest, HintRequest hintRequest) {
+    public PhotoPuzzleAction updatePhotoPuzzleAction(Long photoPuzzleActionId, PhotoPuzzleActionRequest photoPuzzleActionRequest, HintRequest hintRequest) {
         Optional<PhotoPuzzleAction> photoPuzzleActionOptional = photoPuzzleActionRepository.findById(photoPuzzleActionId);
         if (photoPuzzleActionOptional.isEmpty()) return null;
 
@@ -90,13 +89,12 @@ public class PhotoPuzzleActionServiceJpaImpl implements PhotoPuzzleActionService
             }
         }
 
-
         if (hintRequest != null) {
-            photoPuzzleAction.setHint(hintService.updateHint(photoPuzzleAction.getHint().getHintId(), hintRequest)); // 반환 타입이 DTO면 엔티티로 맞추도록 조정 필요
+            photoPuzzleAction.setHint(hintService.updateHint(photoPuzzleAction.getHint().getHintId(), hintRequest));
         }
 
         photoPuzzleActionRepository.save(photoPuzzleAction);
-        return photoPuzzleAction.actionToActionDto();
+        return photoPuzzleAction;
     }
 
     @Override

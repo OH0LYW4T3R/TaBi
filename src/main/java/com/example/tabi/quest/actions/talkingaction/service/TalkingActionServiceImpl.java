@@ -18,7 +18,7 @@ public class TalkingActionServiceImpl implements TalkingActionService {
 
     @Override
     @Transactional
-    public TalkingActionDto createTalkingAction(TalkingActionRequest talkingActionRequest) {
+    public TalkingAction createTalkingAction(TalkingActionRequest talkingActionRequest) {
         TalkingAction talkingAction = new TalkingAction();
 
         talkingAction.setStory(talkingActionRequest.getStory());
@@ -27,21 +27,20 @@ public class TalkingActionServiceImpl implements TalkingActionService {
 
         talkingActionRepository.save(talkingAction);
 
-        return talkingAction.actionToActionDto();
+        return talkingAction;
     }
 
     @Override
-    public TalkingActionDto retrieveTalkingAction(Long talkingActionId) {
+    public TalkingAction retrieveTalkingAction(Long talkingActionId) {
         Optional<TalkingAction> talkingActionOptional = talkingActionRepository.findById(talkingActionId);
-        if (talkingActionOptional.isEmpty()) return null;
 
-        TalkingAction talkingAction = talkingActionOptional.get();
-        return talkingAction.actionToActionDto();
+        return talkingActionOptional.orElse(null);
+
     }
 
     @Override
     @Transactional
-    public TalkingActionDto updateTalkingAction(Long talkingActionId, TalkingActionRequest talkingActionRequest) {
+    public TalkingAction updateTalkingAction(Long talkingActionId, TalkingActionRequest talkingActionRequest) {
         Optional<TalkingAction> talkingActionOptional = talkingActionRepository.findById(talkingActionId);
         if (talkingActionOptional.isEmpty()) return null;
 
@@ -58,7 +57,7 @@ public class TalkingActionServiceImpl implements TalkingActionService {
 
         talkingActionRepository.save(talkingAction);
 
-        return talkingAction.actionToActionDto();
+        return talkingAction; // 엔티티 반환
     }
 
     @Override

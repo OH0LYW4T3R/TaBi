@@ -5,6 +5,7 @@ import com.example.tabi.quest.questrunninglocation.entity.QuestRunningLocation;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,7 +23,7 @@ public class QuestIndicating {
     boolean walkingAction;
 
     @OneToMany(mappedBy = "questIndicating", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<QuestStep> questSteps; // 퀘스트의 순서가 담김
+    private List<QuestStep> questSteps = new ArrayList<>(); // 퀘스트의 순서가 담김
 
     // 관계의 주인
     @OneToOne
