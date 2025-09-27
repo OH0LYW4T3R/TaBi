@@ -11,10 +11,13 @@ import com.example.tabi.quest.quest.entity.Quest;
 import com.example.tabi.quest.questindicating.entity.QuestIndicating;
 import com.example.tabi.quest.questindicating.repository.QuestIndicatingRepository;
 import com.example.tabi.quest.questindicating.vo.QuestIndicatingDto;
+import com.example.tabi.quest.questrunninglocation.entity.QuestRunningLocation;
+import com.example.tabi.quest.questrunninglocation.repository.QuestRunningLocationRepository;
 import com.example.tabi.quest.queststep.entity.QuestStep;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,20 +25,40 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QuestIndicatingServiceJpaImpl implements QuestIndicatingService {
     private final QuestIndicatingRepository questIndicatingRepository;
+    private final QuestRunningLocationRepository questRunningLocationRepository;
 
     @Override
-    public QuestIndicatingDto createQuestIndicating(Long questRunningLocationId) {
+    public QuestIndicating createQuestIndicating(QuestRunningLocation questRunningLocation) {
         QuestIndicating questIndicating = new QuestIndicating();
         questIndicating.setActionCount(0);
         questIndicating.setTalkingAction(false);
         questIndicating.setStayingAction(false);
         questIndicating.setPuzzleAction(false);
         questIndicating.setWalkingAction(false);
-        questIndicating.setQuestIndicatingId(questRunningLocationId);
+
+        questIndicating.setQuestRunningLocation(questRunningLocation);
 
         questIndicatingRepository.save(questIndicating);
 
-        return QuestIndicatingDto.questIndicatingToQuestIndicatingDto(questIndicating);
+        return questIndicating;
+    }
+
+    @Override
+    public List<QuestIndicatingDto> retrieveQuestIndicatings(Long questRunningLocationId) {
+        Optional<QuestRunningLocation> questRunningLocationOptional = questRunningLocationRepository.findById(questRunningLocationId);
+        if (questRunningLocationOptional.isEmpty()) return null;
+
+        Quest quest = questRunningLocationOptional.get().getQuest();
+        List<QuestRunningLocation> questRunningLocations = quest.getQuestRunningLocations();
+
+        List<QuestIndicatingDto> questIndicatingDtos = new ArrayList<>();
+
+        for (QuestRunningLocation questRunningLocation : questRunningLocations) {
+            QuestIndicating questIndicating = questRunningLocation.getQuestIndicating();
+            questIndicatingDtos.add(QuestIndicatingDto.questIndicatingToQuestIndicatingDto(questIndicating));
+        }
+
+        return questIndicatingDtos;
     }
 
     @Override

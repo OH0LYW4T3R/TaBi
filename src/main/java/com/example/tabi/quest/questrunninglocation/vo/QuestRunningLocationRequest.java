@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class QuestRunningLocationRequest {
-    private Long questId;
+    private Long questRunningLocationId;
 
     private Integer sequence; // 순서 번호
     private String locationName; // 보여줄 주소 (ex 한밭대학교)

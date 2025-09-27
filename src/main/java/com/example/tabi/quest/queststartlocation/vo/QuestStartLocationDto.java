@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class QuestStartLocationDto {
     private Long questStartLocationId;
     private String actualLocation;
+    private String indicateLocation;
     private double latitude;
     private double longitude;
     private double altitude;

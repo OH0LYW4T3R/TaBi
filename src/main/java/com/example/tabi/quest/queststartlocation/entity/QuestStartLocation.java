@@ -13,6 +13,7 @@ public class QuestStartLocation {
     private Long questStartLocationId;
 
     private String actualLocation;
+    private String indicateLocation;
 
     private double latitude;
     private double longitude;

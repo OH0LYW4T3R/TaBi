@@ -19,6 +19,8 @@ public class QuestRunningLocationDto {
     private double longitude;
     private double altitude;
 
+    private Long questIndicatingId;
+
     private Long questId;
 
     public static QuestRunningLocationDto questRunningLocationToQuestRunningLocationDto(QuestRunningLocation questRunningLocation) {
@@ -30,6 +32,7 @@ public class QuestRunningLocationDto {
         questRunningLocationDto.setLatitude(questRunningLocation.getLatitude());
         questRunningLocationDto.setLongitude(questRunningLocation.getLongitude());
         questRunningLocationDto.setAltitude(questRunningLocation.getAltitude());
+        questRunningLocationDto.setQuestIndicatingId(questRunningLocation.getQuestIndicating().getQuestIndicatingId());
         questRunningLocationDto.setQuestId(questRunningLocation.getQuest().getQuestId());
 
         return questRunningLocationDto;

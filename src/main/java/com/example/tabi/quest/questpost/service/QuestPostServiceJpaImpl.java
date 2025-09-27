@@ -4,14 +4,22 @@ import com.example.tabi.appuser.entity.AppUser;
 import com.example.tabi.appuser.repository.AppUserRepository;
 import com.example.tabi.appuser.service.AppUserServiceJpaImpl;
 import com.example.tabi.member.repository.MemberRepository;
+import com.example.tabi.postcounter.entity.PostCounter;
+import com.example.tabi.postcounter.service.PostCounterService;
+import com.example.tabi.quest.myquest.service.MyQuestService;
+import com.example.tabi.quest.quest.service.QuestService;
 import com.example.tabi.quest.questpost.entity.QuestPost;
 import com.example.tabi.quest.questpost.repository.QuestPostRepository;
+import com.example.tabi.quest.questpost.vo.FinalSettingQuestPostRequest;
 import com.example.tabi.quest.questpost.vo.QuestPostDto;
-import com.example.tabi.quest.questpost.vo.QuestPostRequest;
+import com.example.tabi.quest.questpost.vo.InitialSettingQuestPostRequest;
+import com.example.tabi.reward.entity.Reward;
+import com.example.tabi.reward.service.RewardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,8 +29,13 @@ public class QuestPostServiceJpaImpl implements QuestPostService {
     private final AppUserRepository appUserRepository;
     private final MemberRepository memberRepository;
 
+    private final RewardService rewardService;
+    private final PostCounterService postCounterService;
+    private final QuestService questService;
+    private final MyQuestService myQuestService;
+
     @Override
-    public QuestPostDto createQuestPost(Authentication authentication, QuestPostRequest questPostRequest) {
+    public QuestPostDto initialSettingQuestPost(Authentication authentication) {
         Optional<AppUser> optionalAppUser = AppUserServiceJpaImpl.authenticationToAppUser(authentication, memberRepository, appUserRepository);
 
         if (optionalAppUser.isEmpty())
@@ -33,14 +46,38 @@ public class QuestPostServiceJpaImpl implements QuestPostService {
         QuestPost questPost = new QuestPost();
         questPost.setUploadUserName(appUser.getMyProfile().getNickName());
         questPost.setUploadUserProfileUrl(appUser.getMyProfile().getProfileImageUrl());
-//        questPost.setQuestTitle();
-//        questPost.setQuestDescription();
-//
-//        questPost.setLocked(false);
-//        questPost.setPub();
+        questPost.setPub(true);
+        questPost.setLocked(false);
 
+        questPostRepository.save(questPost);
 
+        questService.createQuest(questPost);
 
+        // 관계 연결
+        Reward reward = rewardService.createReward(true);
+        questPost.setReward(reward);
+        PostCounter postCounter = postCounterService.createPostCounter();
+        questPost.setPostCounter(postCounter);
+        // 관계 연결
+
+        questPostRepository.save(questPost);
+
+        // 생성한 포스트와 사용자 연결
+        myQuestService.createMyQuest(appUser, questPost);
+
+        return QuestPostDto.questPostToQuestPostDto(questPost);
+    }
+
+    @Override
+    public QuestPostDto finalSettingQuestPost(FinalSettingQuestPostRequest finalSettingQuestPostRequest) {
+        // Optional<QuestPost> questPostOptional = questPostRepository.findById(questPostRequest.)
         return null;
+    }
+
+    // action까지 전체 다보여주는 함수랑 축소해서 보여주는 함수 둘다 만들어서 체킹하기.
+
+    @Override
+    public List<QuestPostDto> getQuestPosts(Authentication authentication, int pages) {
+        return List.of();
     }
 }
