@@ -32,6 +32,7 @@ public class QuestStepController {
             description = """
                     생성에 사용할 요청 객체(QuestStepRequest)<br>
                     ActionType을 꼭 채울것 - ActionType의 종류 -> WALKING, TALKING, STAYING, PHOTO_PUZZLE, LOCATION_PUZZLE, INPUT_PUZZLE (완전히 같게 할 것)<br>
+                    sequence(액션의 순서 값)을 꼭 채울 것.<br>
                     characterImageUrl를 꼭 채울것<br><br>
                     
                     타입별 필수 필드 (ActionType이 결정되면 밑에 필수 필드를 꼭 채워야함. 다른 필드는 채우지 않아도 됨.)<br>
@@ -64,7 +65,8 @@ public class QuestStepController {
     @Operation(
         summary = "퀘스트 액션 수정",
         description = """
-            QuestStep ID로 액션을 찾아 수정.
+            QuestStep ID로 액션을 찾아 수정.<br>
+            액션의 순서가 바뀌는 경우 무조건 해당 API로 요청할것. (3 -> 1 이동한경우 해당 API 호출, 만약 3->1로 이동하면 원래 1, 2번에 있던건 2, 3번으로 변경되니 해당 요소에 대해서도 API 호출)
             """,
         parameters = {
             @io.swagger.v3.oas.annotations.Parameter(

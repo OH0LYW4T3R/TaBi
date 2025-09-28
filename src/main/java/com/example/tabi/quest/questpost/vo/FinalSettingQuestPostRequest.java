@@ -11,7 +11,11 @@ public class FinalSettingQuestPostRequest {
     private String questTitle;
     private String questDescription;
 
-    private LocalDateTime estimatedTime;
+    // 예상 소요시간
+    private Integer estimatedDay;
+    private Integer estimatedHour;
+    private Integer estimatedMinute;
+    // 예상 소요시간
 
     private boolean locked;
     private boolean pub;

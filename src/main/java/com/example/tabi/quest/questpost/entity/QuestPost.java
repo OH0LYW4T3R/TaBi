@@ -27,10 +27,17 @@ public class QuestPost {
     private String questTitle;
     private String questDescription;
 
-    private LocalDateTime estimatedTime; // 예상 소요시간
+    // 예상 소요시간
+    private Integer estimatedDay;
+    private Integer estimatedHour;
+    private Integer estimatedMinute;
+    // 예상 소요시간
 
     private boolean locked;
     private boolean pub;
+
+    private boolean init;
+    private boolean fin;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_counter_id")

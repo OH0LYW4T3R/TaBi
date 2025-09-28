@@ -28,12 +28,12 @@ public class QuestIndicatingController {
     @Operation(
         summary = "퀘스트 인디케이팅(설정) 일괄 조회",
         description = """
-            전달한 questRunningLocationId가 속한 모든 QuestIndicating을 리스트로 반환.<br>
+            전달한 questId가 속한 모든 QuestIndicating을 리스트로 반환.<br>
             """,
         parameters = {
             @io.swagger.v3.oas.annotations.Parameter(
-                name = "questRunningLocationId",
-                description = "기준이 될 QuestRunningLocation ID",
+                name = "questId",
+                description = "기준이 될 Quest ID",
                 required = true,
                 example = "21"
             )
@@ -47,12 +47,12 @@ public class QuestIndicatingController {
                     array = @ArraySchema(schema = @Schema(implementation = QuestIndicatingDto.class))
                 )
             ),
-            @ApiResponse(responseCode = "404", description = "Quest Running Location Id 없음")
+            @ApiResponse(responseCode = "404", description = "Quest Id 없음")
         }
     )
-    @GetMapping("/list/{questRunningLocationId}")
-    public ResponseEntity<?> retrieveQuestIndicatings(@PathVariable Long questRunningLocationId) {
-        List<QuestIndicatingDto> questIndicatings = questIndicatingService.retrieveQuestIndicatings(questRunningLocationId);
+    @GetMapping("/list/{questId}")
+    public ResponseEntity<?> retrieveQuestIndicatings(@PathVariable Long questId) {
+        List<QuestIndicatingDto> questIndicatings = questIndicatingService.retrieveQuestIndicatings(questId);
 
         if (questIndicatings == null || questIndicatings.isEmpty()) {
             return ResponseEntity.notFound().build();

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -26,7 +27,11 @@ public class QuestPostDto {
     private String questTitle;
     private String questDescription;
 
-    private LocalDateTime estimatedTime;
+    // 예상 소요시간
+    private Integer estimatedDay;
+    private Integer estimatedHour;
+    private Integer estimatedMinute;
+    // 예상 소요시간
 
     private boolean locked;
     private boolean pub;
@@ -36,7 +41,7 @@ public class QuestPostDto {
     private PostCounterDto postCounterDto;
     private RewardDto rewardDto;
     private QuestStartLocationDto questStartLocationDto;
-    private QuestPostImageDto questPostImageDto;
+    private List<QuestPostImageDto> questPostImageDtos;
 
     private LocalDateTime createdAt;
 
@@ -48,7 +53,10 @@ public class QuestPostDto {
         if (questPost.getUploadUserProfileUrl() != null) questPostDto.setUploadUserProfileUrl(questPost.getUploadUserProfileUrl());
         if (questPost.getQuestTitle() != null) questPostDto.setQuestTitle(questPost.getQuestTitle());
         if (questPost.getQuestDescription() != null) questPostDto.setQuestDescription(questPost.getQuestDescription());
-        if (questPost.getEstimatedTime() != null) questPostDto.setEstimatedTime(questPost.getEstimatedTime());
+
+        if (questPost.getEstimatedDay() != null) questPostDto.setEstimatedDay(questPost.getEstimatedDay());
+        if (questPost.getEstimatedHour() != null) questPostDto.setEstimatedHour(questPost.getEstimatedHour());
+        if (questPost.getEstimatedMinute() != null) questPostDto.setEstimatedMinute(questPost.getEstimatedMinute());
 
         questPostDto.setLocked(questPost.isLocked());
         questPostDto.setPub(questPost.isPub());
@@ -57,7 +65,6 @@ public class QuestPostDto {
 
         if (questPost.getCreatedAt() != null) questPostDto.setCreatedAt(questPost.getCreatedAt());
 
-        // --- 연관 Dto 매핑 (분기만 두고 내부 비움) ---
         if (questPost.getPostCounter() != null) {
             questPostDto.setPostCounterDto(PostCounterServiceJpaImpl.postCounterToPostCounterDto(questPost.getPostCounter()));
         }
@@ -65,10 +72,10 @@ public class QuestPostDto {
             questPostDto.setRewardDto(RewardServiceJpaImpl.rewardToRewardDto(questPost.getReward()));
         }
         if (questPost.getQuestStartLocation() != null) {
-            // questPostDto.setQuestStartLocationDto(...);
+            questPostDto.setQuestStartLocationDto(QuestStartLocationDto.questStartLocationToQuestStartLocationDto(questPost.getQuestStartLocation()));
         }
         if (questPost.getQuestPostImages() != null && !questPost.getQuestPostImages().isEmpty()) {
-            // questPostDto.setQuestPostImageDto(...);
+            questPostDto.setQuestPostImageDtos(questPost.getQuestPostImages().stream().map(QuestPostImageDto::questPostImageToQuestPostImageDto).collect(Collectors.toList()));
         }
 
         return questPostDto;

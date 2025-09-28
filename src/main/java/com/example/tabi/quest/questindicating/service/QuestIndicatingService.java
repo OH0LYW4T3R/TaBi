@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface QuestIndicatingService {
     QuestIndicating createQuestIndicating(QuestRunningLocation questRunningLocation);
-    List<QuestIndicatingDto> retrieveQuestIndicatings(Long questRunningLocationId);
+    List<QuestIndicatingDto> retrieveQuestIndicatings(Long questId);
     QuestIndicatingDto retrieveQuestIndicating(Long questIndicatingId);
     QuestIndicating updateQuestIndicating(QuestIndicating questIndicating);
 }

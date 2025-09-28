@@ -19,12 +19,14 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor
 public class QuestStepDto {
     private Long questStepId;
+    private Integer sequence;
     private ActionDto actionDto;
     private Long questIndicatingId;
 
     public static QuestStepDto questStepToQuestStepDto(QuestStep questStep) {
         return new QuestStepDto(
                 questStep.getQuestStepId(),
+                questStep.getSequence(),
                 questStep.getAction().actionToActionDto(),
                 questStep.getQuestIndicating().getQuestIndicatingId()
             );

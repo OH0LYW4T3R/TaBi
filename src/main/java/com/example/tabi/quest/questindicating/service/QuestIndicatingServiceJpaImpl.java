@@ -8,6 +8,7 @@ import com.example.tabi.quest.actions.stayingaction.entity.StayingAction;
 import com.example.tabi.quest.actions.talkingaction.entity.TalkingAction;
 import com.example.tabi.quest.actions.walkingaction.entity.WalkingAction;
 import com.example.tabi.quest.quest.entity.Quest;
+import com.example.tabi.quest.quest.repository.QuestRepository;
 import com.example.tabi.quest.questindicating.entity.QuestIndicating;
 import com.example.tabi.quest.questindicating.repository.QuestIndicatingRepository;
 import com.example.tabi.quest.questindicating.vo.QuestIndicatingDto;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QuestIndicatingServiceJpaImpl implements QuestIndicatingService {
     private final QuestIndicatingRepository questIndicatingRepository;
-    private final QuestRunningLocationRepository questRunningLocationRepository;
+    private final QuestRepository questRepository;
 
     @Override
     public QuestIndicating createQuestIndicating(QuestRunningLocation questRunningLocation) {
@@ -44,18 +46,18 @@ public class QuestIndicatingServiceJpaImpl implements QuestIndicatingService {
     }
 
     @Override
-    public List<QuestIndicatingDto> retrieveQuestIndicatings(Long questRunningLocationId) {
-        Optional<QuestRunningLocation> questRunningLocationOptional = questRunningLocationRepository.findById(questRunningLocationId);
-        if (questRunningLocationOptional.isEmpty()) return null;
+    public List<QuestIndicatingDto> retrieveQuestIndicatings(Long questId) {
+        Optional<Quest> questOptional = questRepository.findById(questId);
+        if (questOptional.isEmpty()) return null;
 
-        Quest quest = questRunningLocationOptional.get().getQuest();
+        Quest quest = questOptional.get();
         List<QuestRunningLocation> questRunningLocations = quest.getQuestRunningLocations();
 
         List<QuestIndicatingDto> questIndicatingDtos = new ArrayList<>();
 
         for (QuestRunningLocation questRunningLocation : questRunningLocations) {
-            QuestIndicating questIndicating = questRunningLocation.getQuestIndicating();
-            questIndicatingDtos.add(QuestIndicatingDto.questIndicatingToQuestIndicatingDto(questIndicating));
+            QuestIndicating updatedQuestIndicating = updateQuestIndicating(questRunningLocation.getQuestIndicating());
+            questIndicatingDtos.add(QuestIndicatingDto.questIndicatingToQuestIndicatingDto(updatedQuestIndicating));
         }
 
         return questIndicatingDtos;
@@ -91,6 +93,8 @@ public class QuestIndicatingServiceJpaImpl implements QuestIndicatingService {
             else
                 throw new IllegalArgumentException("지원하지 않는 Action subtype: " + action.getClass());
         }
+
+        questSteps.sort(Comparator.comparingInt(QuestStep::getSequence));
 
         questIndicatingRepository.save(questIndicating);
 

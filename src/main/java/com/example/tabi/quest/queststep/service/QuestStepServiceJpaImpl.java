@@ -52,6 +52,7 @@ public class QuestStepServiceJpaImpl implements QuestStepService {
         if (questIndicatingOptional.isEmpty()) return null; // Not there Exist Quest Indicating ID
 
         questStep.setQuestIndicating(questIndicatingOptional.get());
+        questStep.setSequence(questStepRequest.getSequence());
 
         if (questStepRequest.getActionType() != null) {
             Action action = null;
@@ -97,6 +98,8 @@ public class QuestStepServiceJpaImpl implements QuestStepService {
         if (questStepOptional.isEmpty()) return null;
 
         QuestStep questStep = questStepOptional.get();
+
+        questStep.setSequence(questStepRequest.getSequence());
 
         if (questStepRequest.getActionType() != null) {
             // action = (Action) org.hibernate.Hibernate.unproxy(action); -> 프록시 문제 발생시 해당 코드로 변경

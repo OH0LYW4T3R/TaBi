@@ -19,6 +19,8 @@ public class QuestStep {
     @JoinColumn(name = "quest_indicating_id")
     private QuestIndicating questIndicating;
 
+    private Integer sequence;
+
     @OneToOne(mappedBy = "questStep", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Action action;
 }

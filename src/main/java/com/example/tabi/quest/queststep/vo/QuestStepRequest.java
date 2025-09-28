@@ -11,6 +11,8 @@ import java.util.List;
 public class QuestStepRequest {
     private Long questIndicatingId;
 
+    private Integer sequence;
+
     private ActionType actionType; // WALKING, TALKING, STAYING, PHOTO_PUZZLE, LOCATION_PUZZLE, INPUT_PUZZLE
 
     //Common Field

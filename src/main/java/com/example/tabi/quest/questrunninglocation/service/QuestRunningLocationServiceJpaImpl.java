@@ -79,6 +79,7 @@ public class QuestRunningLocationServiceJpaImpl implements QuestRunningLocationS
         Quest quest = questOptional.get();
 
         List<QuestRunningLocation> questRunningLocations = quest.getQuestRunningLocations();
+        questRunningLocations.sort(Comparator.comparingInt(QuestRunningLocation::getSequence));
 
         return questRunningLocations.stream().map(QuestRunningLocationDto::questRunningLocationToQuestRunningLocationDto).collect(Collectors.toList());
     }
