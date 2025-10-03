@@ -20,13 +20,34 @@ import lombok.RequiredArgsConstructor;
 public class QuestStepDto {
     private Long questStepId;
     private Integer sequence;
+    private String actionType;
     private ActionDto actionDto;
     private Long questIndicatingId;
 
     public static QuestStepDto questStepToQuestStepDto(QuestStep questStep) {
+        String extractActionType;
+        Action action = questStep.getAction();
+
+        if (action instanceof WalkingAction) {
+            extractActionType = "WALKING";
+        } else if (action instanceof TalkingAction) {
+            extractActionType = "TALKING";
+        } else if (action instanceof StayingAction) {
+            extractActionType = "STAYING";
+        } else if (action instanceof PhotoPuzzleAction) {
+            extractActionType = "PHOTO_PUZZLE";
+        } else if (action instanceof LocationPuzzleAction) {
+            extractActionType = "LOCATION_PUZZLE";
+        } else if (action instanceof InputPuzzleAction) {
+            extractActionType = "INPUT_PUZZLE";
+        } else {
+            throw new IllegalArgumentException("Unsupported Action subtype: " + action.getClass());
+        }
+
         return new QuestStepDto(
                 questStep.getQuestStepId(),
                 questStep.getSequence(),
+                extractActionType,
                 questStep.getAction().actionToActionDto(),
                 questStep.getQuestIndicating().getQuestIndicatingId()
             );
