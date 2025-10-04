@@ -15,6 +15,7 @@ public class Quest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questId;
 
+    // @OrderBy("sequence ASC") 고려
     @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<QuestRunningLocation> questRunningLocations = new ArrayList<>();
 

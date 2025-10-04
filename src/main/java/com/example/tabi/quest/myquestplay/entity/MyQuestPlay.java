@@ -1,6 +1,9 @@
 package com.example.tabi.quest.myquestplay.entity;
 
 import com.example.tabi.appuser.entity.AppUser;
+import com.example.tabi.quest.myquestplay.trace.questcurrentpoint.entity.QuestCurrentPoint;
+import com.example.tabi.quest.myquestplay.trace.questhintsave.entity.QuestHintSave;
+import com.example.tabi.quest.myquestplay.trace.questsavepoint.entity.QuestSavePoint;
 import com.example.tabi.quest.questpost.entity.QuestPost;
 import com.example.tabi.util.PlayStatus;
 import jakarta.persistence.*;
@@ -9,6 +12,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -27,7 +32,16 @@ public class MyQuestPlay {
 
     private PlayStatus playStatus;
 
-    //힌트 해금여부 저장하는 클래스..
+    // Trace
+    @OneToOne(mappedBy = "myQuestPlay", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private QuestCurrentPoint questCurrentPoint;
+
+    @OneToOne(mappedBy = "myQuestPlay", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private QuestSavePoint questSavePoint;
+
+    @OneToMany(mappedBy = "myQuestPlay", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<QuestHintSave> questHintSaves = new ArrayList<>();
+    // Trace
 
     @CreationTimestamp
     private LocalDateTime createdAt;

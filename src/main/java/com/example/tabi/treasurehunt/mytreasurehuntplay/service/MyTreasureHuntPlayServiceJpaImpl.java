@@ -35,7 +35,6 @@ public class MyTreasureHuntPlayServiceJpaImpl implements MyTreasureHuntPlayServi
     private final AppUserRepository appUserRepository;
     private final MemberRepository memberRepository;
     private final MyTreasureHuntPlayRepository myTreasureHuntPlayRepository;
-    private final MyTreasureHuntRepository myTreasureHuntRepository;
     private final TreasureHuntPostRepository treasureHuntPostRepository;
 
     private final RewardService rewardService;
