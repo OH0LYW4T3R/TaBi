@@ -9,6 +9,7 @@ import com.example.tabi.quest.actions.photopuzzleaction.entity.PhotoKeyword;
 import com.example.tabi.quest.actions.photopuzzleaction.entity.PhotoPuzzleAction;
 import com.example.tabi.quest.actions.stayingaction.entity.StayingAction;
 import com.example.tabi.quest.actions.talkingaction.entity.TalkingAction;
+import com.example.tabi.quest.actions.talkingaction.vo.TalkingActionDto;
 import com.example.tabi.quest.actions.walkingaction.entity.WalkingAction;
 import com.example.tabi.quest.myquestplay.entity.MyQuestPlay;
 import com.example.tabi.quest.myquestplay.repository.MyQuestPlayRepository;
@@ -147,10 +148,10 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
         }
 
         MyQuestPlay myQuestPlay = myQuestPlayOptional.get();
-        if (myQuestPlay.getPlayStatus() != PlayStatus.PLAYING) {
-            questNextLocationForErrorDto.setErrorMessage("Current Quest Play Status is not playing");
-            return questNextLocationForErrorDto;
-        }
+//        if (myQuestPlay.getPlayStatus() != PlayStatus.PLAYING) {
+//            questNextLocationForErrorDto.setErrorMessage("Current Quest Play Status is not playing");
+//            return questNextLocationForErrorDto;
+//        }
 
         QuestCurrentPoint questCurrentPoint = myQuestPlay.getQuestCurrentPoint();
         Integer currentQuestRunningLocationIndex = questCurrentPoint.getCurrentQuestRunningLocationIndex();
@@ -254,6 +255,7 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
     }
 
     @Override
+    @Transactional
     public QuestAnswerCheckDto checkAnswer(Long myQuestPlayId, QuestCurrentPointAnswerRequest questCurrentPointAnswerRequest) {
         // 퍼즐에 대해서 정답인 경우 actionIndex 이동
         QuestAnswerCheckDto questAnswerCheckDto = new QuestAnswerCheckDto();
@@ -334,6 +336,44 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
     }
 
     @Override
+    public QuestMostRecentTalkingActionDto retrieveMostRecentTalkingAction(Long myQuestPlayId) {
+        QuestMostRecentTalkingActionDto questMostRecentTalkingActionForErrorDto = new QuestMostRecentTalkingActionDto();
+
+        Optional<MyQuestPlay> myQuestPlayOptional = myQuestPlayRepository.findById(myQuestPlayId);
+        if (myQuestPlayOptional.isEmpty()) {
+            questMostRecentTalkingActionForErrorDto.setErrorMessage("My Quest Play Id is not found");
+            return questMostRecentTalkingActionForErrorDto;
+        }
+
+        MyQuestPlay myQuestPlay = myQuestPlayOptional.get();
+        if (myQuestPlay.getPlayStatus() != PlayStatus.PLAYING) {
+            questMostRecentTalkingActionForErrorDto.setErrorMessage("Current Quest Play Status is not playing");
+            return questMostRecentTalkingActionForErrorDto;
+        }
+
+        QuestCurrentPoint questCurrentPoint = myQuestPlay.getQuestCurrentPoint();
+        Integer currentQuestRunningLocationIndex = questCurrentPoint.getCurrentQuestRunningLocationIndex();
+        Integer currentActionIndex = questCurrentPoint.getCurrentActionIndex();
+
+        QuestRunningLocation currentQuestRunningLocation = myQuestPlay.getQuestPost().getQuest().getQuestRunningLocations().get(currentQuestRunningLocationIndex);
+        List<QuestStep> questSteps = currentQuestRunningLocation.getQuestIndicating().getQuestSteps();
+
+        for (int i = currentActionIndex; i >= 0; i--) {
+            Action action = questSteps.get(i).getAction();
+
+            if (action instanceof TalkingAction talkingAction) {
+                QuestMostRecentTalkingActionDto questMostRecentTalkingActionDto = new QuestMostRecentTalkingActionDto();
+                questMostRecentTalkingActionDto.setTalkingActionDto(talkingAction.actionToActionDto());
+                return questMostRecentTalkingActionDto;
+            }
+        }
+
+        questMostRecentTalkingActionForErrorDto.setErrorMessage("Recent Talking Not Found");
+        return questMostRecentTalkingActionForErrorDto;
+    }
+
+    @Override
+    @Transactional
     public void deleteQuestCurrentPointById(Long questCurrentPointId) {
         questCurrentPointRepository.deleteById(questCurrentPointId);
     }

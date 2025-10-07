@@ -173,7 +173,7 @@ public class TreasureHuntPostController {
         String result = treasureHuntPostService.playTreasureHuntPost(authentication, positionRequest);
 
         if (result.equals("success"))
-            return ResponseEntity.ok().build(); // or .noContent().build(); if you want 204
+            return ResponseEntity.ok().build();
         else
             return ResponseEntity.badRequest().body(result);
     }

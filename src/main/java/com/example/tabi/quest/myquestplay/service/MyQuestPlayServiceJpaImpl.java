@@ -166,8 +166,9 @@ public class MyQuestPlayServiceJpaImpl implements MyQuestPlayService {
 
                 myQuestPlay = myQuestPlayOptinal.get();
 
-                if (myQuestPlay.getPlayStatus() != PlayStatus.PENDING && myQuestPlay.getPlayStatus() != PlayStatus.AVAILABLE) {
-                    myQuestPlayForErrorDto.setErrorMessage("Playing state is not possible because it is not in the available state or the pending state");
+                //myQuestPlay.getPlayStatus() != PlayStatus.PENDING &&
+                if (myQuestPlay.getPlayStatus() != PlayStatus.AVAILABLE) {
+                    myQuestPlayForErrorDto.setErrorMessage("Playing state is not possible because it is not in the available state");
                     return myQuestPlayForErrorDto;
                 }
 
@@ -197,6 +198,12 @@ public class MyQuestPlayServiceJpaImpl implements MyQuestPlayService {
                 }
 
                 myQuestPlay = myQuestPlayOptinal.get();
+
+                if (myQuestPlay.getPlayStatus() != PlayStatus.PLAYING) {
+                    myQuestPlayForErrorDto.setErrorMessage("Cleared state is not possible because it is not in the playing state");
+                    return myQuestPlayForErrorDto;
+                }
+
                 QuestCurrentPoint questCurrentPoint = myQuestPlay.getQuestCurrentPoint();
 
                 if (!Objects.equals(questCurrentPoint.getCurrentActionIndex(), questCurrentPoint.getEndActionIndex()) && !Objects.equals(questCurrentPoint.getCurrentQuestRunningLocationIndex(), questCurrentPoint.getEndQuestRunningLocationIndex())) {

@@ -6,6 +6,8 @@ import com.example.tabi.appuser.service.AppUserServiceJpaImpl;
 import com.example.tabi.member.repository.MemberRepository;
 import com.example.tabi.postcounter.entity.PostCounter;
 import com.example.tabi.postcounter.service.PostCounterService;
+import com.example.tabi.quest.myquest.entity.MyQuest;
+import com.example.tabi.quest.myquest.repository.MyQuestRepository;
 import com.example.tabi.quest.myquest.service.MyQuestService;
 import com.example.tabi.quest.quest.service.QuestService;
 import com.example.tabi.quest.questpost.entity.QuestPost;
@@ -13,13 +15,13 @@ import com.example.tabi.quest.questpost.repository.QuestPostRepository;
 import com.example.tabi.quest.questpost.vo.FinalSettingQuestPostRequest;
 import com.example.tabi.quest.questpost.vo.FullQuestPostDto;
 import com.example.tabi.quest.questpost.vo.QuestPostDto;
-import com.example.tabi.quest.questpost.vo.InitialSettingQuestPostRequest;
 import com.example.tabi.quest.questpostimage.entity.QuestPostImage;
 import com.example.tabi.quest.questpostimage.repository.QuestPostImageRepository;
 import com.example.tabi.quest.questpostimage.service.QuestPostImageService;
 import com.example.tabi.quest.queststartlocation.service.QuestStartLocationService;
 import com.example.tabi.reward.entity.Reward;
 import com.example.tabi.reward.service.RewardService;
+import com.example.tabi.util.PostStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,6 +37,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QuestPostServiceJpaImpl implements QuestPostService {
     private final QuestPostRepository questPostRepository;
+    private final MyQuestRepository myQuestRepository;
     private final AppUserRepository appUserRepository;
     private final MemberRepository memberRepository;
 
@@ -142,5 +145,44 @@ public class QuestPostServiceJpaImpl implements QuestPostService {
         Page<QuestPost> questPosts = questPostRepository.findVisiblePostsNotCreatedBy(appUser.getMyProfile().getNickName(), page);
 
         return questPosts.getContent().stream().map(QuestPostDto::questPostToQuestPostDto).toList();
+    }
+
+    @Override
+    public String playQuestPost(Authentication authentication, Long questPostId) {
+        Optional<AppUser> optionalAppUser = AppUserServiceJpaImpl.authenticationToAppUser(authentication, memberRepository, appUserRepository);
+
+        if (optionalAppUser.isEmpty())
+            return "User Not Found";
+
+        AppUser appUser = optionalAppUser.get();
+
+        Optional<QuestPost> optionalQuestPost = questPostRepository.findById(questPostId);
+
+        if (optionalQuestPost.isEmpty())
+            return "Quest Post Not Found";
+        QuestPost questPost = optionalQuestPost.get();
+
+        Optional<MyQuest> myQuestOptional = myQuestRepository.findByAppUserAndQuestPost(appUser, questPost);
+
+        if (myQuestOptional.isPresent()) {
+            MyQuest myQuest = myQuestOptional.get();
+
+            if (myQuest.getStatus() == PostStatus.CREATED)
+                return "The creator cannot run.";
+
+            if (myQuest.getStatus() == PostStatus.RUNNING)
+                return "This is a post that is already running.";
+
+            if (myQuest.getStatus() == PostStatus.TERMINATED)
+                return "This post has been terminated.";
+
+            if (myQuest.getStatus() == PostStatus.SAVED) {
+                myQuestRepository.delete(myQuest); // 저장된건 삭제하고 플레이로 넘김
+            }
+        }
+
+        myQuestService.playMyQuest(appUser, questPost);
+
+        return "success";
     }
 }

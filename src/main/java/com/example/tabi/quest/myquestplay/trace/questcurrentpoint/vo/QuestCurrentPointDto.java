@@ -18,6 +18,8 @@ import java.util.Objects;
 
 @Data
 public class QuestCurrentPointDto {
+    private Long questCurrentPointId;
+
     private ActionType actionType; // WALKING, TALKING, STAYING, PHOTO_PUZZLE, LOCATION_PUZZLE, INPUT_PUZZLE
 
     //Common Field
@@ -44,6 +46,7 @@ public class QuestCurrentPointDto {
     public static QuestCurrentPointDto questCurrentPointToQuestCurrentPointDto(QuestCurrentPoint questCurrentPoint, Action action, QuestHintSave questHintSave) {
         QuestCurrentPointDto questCurrentPointDto = new QuestCurrentPointDto();
 
+        questCurrentPointDto.setQuestCurrentPointId(questCurrentPoint.getQuestCurrentPointId());
         questCurrentPointDto.setCharacterImageUrl(action.getCharacterImageUrl());
 
         if (Objects.equals(questCurrentPoint.getCurrentActionIndex(), questCurrentPoint.getEndActionIndex()))

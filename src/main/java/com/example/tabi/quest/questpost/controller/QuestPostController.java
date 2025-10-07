@@ -146,4 +146,38 @@ public class QuestPostController {
         }
         return ResponseEntity.ok(list);
     }
+
+    @Operation(
+        summary = "퀘스트 플레이 시작",
+        description = """
+                요청한 퀘스트 게시글의 플레이를 시작 (실행 중인 퀘스트) <br>
+                이미 실행 중이거나 종료된 경우, 혹은 작성자가 본인인 경우 실행이 제한 <br>
+                저장 상태(SAVED)일 경우 저장 레코드를 삭제 후 실행으로 전환. <br>
+                로컬에는 /api/my-quest/my-running에 요청을해 위치정보 수입해야 함.
+                """,
+        responses = {
+            @ApiResponse(responseCode = "200", description = "플레이 시작 처리 성공"),
+            @ApiResponse(
+                responseCode = "400",
+                description = """
+                    잘못된 요청으로 플레이 시작 실패. 가능한 실패 사유: <br>
+                    - User Not Found : 인증된 사용자가 없음 <br>
+                    - Quest Post Not Found : 해당 게시글이 존재하지 않음 <br>
+                    - The creator cannot run. : 작성자는 실행 불가 <br>
+                    - This is a post that is already running. : 이미 실행 중 <br>
+                    - This post has been terminated. : 종료된 게시글 <br>
+                    """
+            )
+        }
+    )
+    @PostMapping("/play")
+    public ResponseEntity<?> playQuestPost(Authentication authentication, @io.swagger.v3.oas.annotations.Parameter(description = "플레이할 퀘스트 게시글 ID", example = "123") @RequestParam("questPostId") Long questPostId) {
+        String result = questPostService.playQuestPost(authentication, questPostId);
+
+        if ("success".equals(result)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
 }
