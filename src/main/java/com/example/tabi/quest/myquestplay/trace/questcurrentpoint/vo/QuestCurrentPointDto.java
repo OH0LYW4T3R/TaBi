@@ -49,6 +49,7 @@ public class QuestCurrentPointDto {
         questCurrentPointDto.setQuestCurrentPointId(questCurrentPoint.getQuestCurrentPointId());
         questCurrentPointDto.setCharacterImageUrl(action.getCharacterImageUrl());
 
+        System.out.println(questCurrentPoint.getCurrentActionIndex().toString() + questCurrentPoint.getEndActionIndex());
         if (Objects.equals(questCurrentPoint.getCurrentActionIndex(), questCurrentPoint.getEndActionIndex()))
             questCurrentPointDto.setEndAction(true);
         else questCurrentPointDto.setEndAction(false);

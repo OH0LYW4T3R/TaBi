@@ -155,6 +155,7 @@ public class MyQuestPlayController {
             현재 위치가 '퀘스트 시작 위치' 반경 15m(0.015km) 이내일 때 AVAILABLE 상태로 등록.<br>
             첫 등록 시 MyQuestPlay 레코드를 생성, PENDING에서 재접근 시 반경 확인 후 AVAILABLE로 복귀.<br>
             Available에서 갈 수 있는 상태 -> Playing(여러개의 실행 리스트 중 해당 퀘스트가 선택된 경우), Pending(실행 위치로 부터 5km 벗어난 경우)
+            <br>swagger의 표시 오류로 Request Body에 treasureHuntPostId가 아니라 questPostId를 넣어줘야함.
             """,
         responses = {
             @ApiResponse(
@@ -185,6 +186,7 @@ public class MyQuestPlayController {
             Pending의 기준은 실행위치 기준 5km 반경을 벗어난 경우 Pending 요청 할것.<br>
             서버는 현재 진행 지점을 SavePoint로 저장하여 이후 복귀 시 복원.<br>
             Pending에서 갈 수 있는 상태 -> Available(실행 위치로 부터 15m 반경안에 든 경우)
+            <br>swagger의 표시 오류로 Request Body에 treasureHuntPostId가 아니라 questPostId를 넣어줘야함.
             """,
         responses = {
             @ApiResponse(
@@ -214,6 +216,7 @@ public class MyQuestPlayController {
             AVAILABLE 상태의 퀘스트를 다시 실행(PLAYING)으로 전환.<br>
             SavePoint가 있는 경우 SavePoint를 로드하여 이어서 진행. <br>
             Playing에서 갈 수 있는 상태 -> Pending(실행 위치로 부터 5km 벗어난 경우), Cleared(모든 퀘스트를 다 클리어한 경우)
+            <br>swagger의 표시 오류로 Request Body에 treasureHuntPostId가 아니라 questPostId를 넣어줘야함.
             """,
         responses = {
             @ApiResponse(
@@ -242,6 +245,7 @@ public class MyQuestPlayController {
         description = """
             현재 진행 지점이 마지막 지점(액션/러닝 로케이션 인덱스)이면 퀘스트를 완료(CLEARED)로 전환.<br>
             완료 시 리워드 지급 후 상태를 CLEARED로 저장.
+            <br>swagger의 표시 오류로 Request Body에 treasureHuntPostId가 아니라 questPostId를 넣어줘야함.
             """,
         responses = {
             @ApiResponse(

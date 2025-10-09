@@ -9,6 +9,7 @@ import com.example.tabi.quest.questpostimage.vo.QuestPostImageDto;
 import com.example.tabi.quest.questrunninglocation.entity.QuestRunningLocation;
 import com.example.tabi.quest.questrunninglocation.vo.QuestRunningLocationDto;
 import com.example.tabi.quest.queststartlocation.vo.QuestStartLocationDto;
+import com.example.tabi.quest.queststep.entity.QuestStep;
 import com.example.tabi.reward.service.RewardServiceJpaImpl;
 import com.example.tabi.reward.vo.RewardDto;
 import lombok.Data;
@@ -99,6 +100,7 @@ public class FullQuestPostDto {
             List<QuestIndicatingDto> questIndicatingDtos = new ArrayList<>();
             for (QuestRunningLocation questRunningLocation : questRunningLocations) {
                 QuestIndicating questIndicating = questRunningLocation.getQuestIndicating();
+                questIndicating.getQuestSteps().sort(Comparator.comparingInt(QuestStep::getSequence));
                 questIndicatingDtos.add(QuestIndicatingDto.questIndicatingToQuestIndicatingDto(questIndicating));
             }
 

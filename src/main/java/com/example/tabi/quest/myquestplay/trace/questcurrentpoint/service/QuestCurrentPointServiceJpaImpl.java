@@ -25,6 +25,7 @@ import com.example.tabi.util.GeoUtil;
 import com.example.tabi.util.PlayStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +37,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService {
     private static final Double ACCEPT_BASE_RADIUS_KM = 0.015;
     private final MyQuestPlayRepository myQuestPlayRepository;
@@ -45,12 +47,15 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
     @Transactional
     public QuestCurrentPoint createQuestCurrentPoint(MyQuestPlay myQuestPlay) {
         QuestPost questPost = myQuestPlay.getQuestPost();
+
         List<QuestRunningLocation> questRunningLocations = questPost.getQuest().getQuestRunningLocations();
+        questRunningLocations.sort(Comparator.comparingInt(QuestRunningLocation::getSequence));
+
         QuestRunningLocation startQuestRunningLocation = questRunningLocations.get(0);
         QuestRunningLocation endQuestRunningLocation = questRunningLocations.get(questRunningLocations.size() - 1);
 
         List<QuestStep> questSteps = questPost.getQuest().getQuestRunningLocations().get(0).getQuestIndicating().getQuestSteps();
-        //questSteps.sort(Comparator.comparingInt(QuestStep::getSequence));
+        questSteps.sort(Comparator.comparingInt(QuestStep::getSequence));
         QuestStep startQuestStep = questSteps.get(0);
         QuestStep endQuestStep = questSteps.get(questSteps.size() - 1);
 
@@ -63,10 +68,10 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
         questCurrentPoint.setCurrentActionIndex(0);
 
         questCurrentPoint.setEndQuestRunningLocationId(endQuestRunningLocation.getQuestRunningLocationId());
-        questCurrentPoint.setEndQuestRunningLocationIndex(endQuestRunningLocation.getSequence());
+        questCurrentPoint.setEndQuestRunningLocationIndex(endQuestRunningLocation.getSequence() - 1); // 인덱스가 0based 이므로
 
         questCurrentPoint.setEndActionId(endQuestStep.getAction().getActionId());
-        questCurrentPoint.setEndActionIndex(endQuestStep.getSequence());
+        questCurrentPoint.setEndActionIndex(endQuestStep.getSequence() - 1); // 인덱스가 0based 이므로
 
         questCurrentPoint.setMyQuestPlay(myQuestPlay);
 
@@ -87,6 +92,8 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
         QuestCurrentPoint questCurrentPoint = myQuestPlay.getQuestCurrentPoint();
         Integer currentQuestRunningLocationIndex = questCurrentPoint.getCurrentQuestRunningLocationIndex();
         Integer currentActionIndex = questCurrentPoint.getCurrentActionIndex();
+
+        System.out.println(currentActionIndex);
 
         QuestRunningLocation currentQuestRunningLocation = myQuestPlay.getQuestPost().getQuest().getQuestRunningLocations().get(currentQuestRunningLocationIndex);
         Action currentAction = currentQuestRunningLocation.getQuestIndicating().getQuestSteps().get(currentActionIndex).getAction();
@@ -129,6 +136,7 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
         if (currentActionIndex + 1 <= currentQuestRunningLocation.getQuestIndicating().getQuestSteps().size() - 1) {
             Integer nextActionIndex = questCurrentPoint.getCurrentActionIndex() + 1;
             questCurrentPoint.setCurrentActionIndex(nextActionIndex);
+            currentQuestRunningLocation.getQuestIndicating().getQuestSteps().sort(Comparator.comparingInt(QuestStep::getSequence));
             questCurrentPoint.setCurrentActionId(currentQuestRunningLocation.getQuestIndicating().getQuestSteps().get(nextActionIndex).getAction().getActionId());
 
             questCurrentPointRepository.save(questCurrentPoint);
@@ -187,6 +195,7 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
         }
 
         List<QuestRunningLocation> currentQuestRunningLocations = myQuestPlay.getQuestPost().getQuest().getQuestRunningLocations();
+        currentQuestRunningLocations.sort(Comparator.comparingInt(QuestRunningLocation::getSequence));
 
         if (currentQuestRunningLocationIndex + 1 <= currentQuestRunningLocations.size() - 1) { // 실행장소가 마지막을 벗어나지 않았다면
             Integer nextQuestRunningLocationIndex = questCurrentPoint.getCurrentQuestRunningLocationIndex() + 1;
@@ -202,8 +211,16 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
             questCurrentPoint.setCurrentQuestRunningLocationId(nextQuestRunningLocation.getQuestRunningLocationId());
 
             // 다음 위치 넘어갔으므로 첫번째 액션으로 셋팅
+            List<QuestStep> nextRunningLocationQuestSteps = currentQuestRunningLocations.get(nextQuestRunningLocationIndex).getQuestIndicating().getQuestSteps();
+            nextRunningLocationQuestSteps.sort(Comparator.comparingInt(QuestStep::getSequence));
+
             questCurrentPoint.setCurrentActionIndex(0);
-            questCurrentPoint.setCurrentActionId(currentQuestRunningLocations.get(nextQuestRunningLocationIndex).getQuestIndicating().getQuestSteps().get(0).getAction().getActionId());
+            questCurrentPoint.setCurrentActionId(nextRunningLocationQuestSteps.get(0).getAction().getActionId());
+
+            // 끝 인덱스도 다음 위치의 액션리스트의 마지막으로 갱신
+            int endIndex = nextRunningLocationQuestSteps.size() - 1;
+            questCurrentPoint.setEndActionIndex(endIndex);
+            questCurrentPoint.setEndActionId(nextRunningLocationQuestSteps.get(endIndex).getAction().getActionId());
 
             questCurrentPointRepository.save(questCurrentPoint);
 
@@ -357,6 +374,7 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
 
         QuestRunningLocation currentQuestRunningLocation = myQuestPlay.getQuestPost().getQuest().getQuestRunningLocations().get(currentQuestRunningLocationIndex);
         List<QuestStep> questSteps = currentQuestRunningLocation.getQuestIndicating().getQuestSteps();
+        questSteps.sort(Comparator.comparingInt(QuestStep::getSequence));
 
         for (int i = currentActionIndex; i >= 0; i--) {
             Action action = questSteps.get(i).getAction();

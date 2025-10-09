@@ -4,8 +4,12 @@ import com.example.tabi.quest.questpost.entity.QuestPost;
 import com.example.tabi.quest.questrunninglocation.entity.QuestRunningLocation;
 import com.example.tabi.quest.queststartlocation.entity.QuestStartLocation;
 import com.example.tabi.quest.queststartlocation.repository.QuestStartLocationRepository;
+import com.example.tabi.quest.queststep.entity.QuestStep;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +19,9 @@ public class QuestStartLocationServiceJpaImpl implements QuestStartLocationServi
     @Override
     public QuestStartLocation createQuestStartLocation(QuestPost questPost) {
         QuestStartLocation questStartLocation = new QuestStartLocation();
+
+        List<QuestRunningLocation> questRunningLocations = questPost.getQuest().getQuestRunningLocations();
+        questRunningLocations.sort(Comparator.comparingInt(QuestRunningLocation::getSequence));
         QuestRunningLocation questRunningLocation = questPost.getQuest().getQuestRunningLocations().get(0); // 시작 위치 (실행위치의 처음것)
 
         questStartLocation.setQuestPost(questPost);

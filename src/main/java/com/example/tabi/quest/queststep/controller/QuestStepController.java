@@ -40,7 +40,7 @@ public class QuestStepController {
                     TALKING : story<br>
                     STAYING : day, hour, minute<br>
                     PHOTO_PUZZLE : photoKeywordRequests<br>
-                    LOCATION_PUZZLE : locationName(보여지는 주소), actualLocation(실주소), latitude, longitude, altitude
+                    LOCATION_PUZZLE : locationName(보여지는 주소), actualLocation(실주소), latitude, longitude, altitude<br>
                     INPUT_PUZZLE : answerString<br><br>
                     
                     Puzzle Action인 경우는 hintOne, hintTwo, hintThree를 꼭 채울 것. (사용자가 채우지 않는 경우 null로 보낼것)

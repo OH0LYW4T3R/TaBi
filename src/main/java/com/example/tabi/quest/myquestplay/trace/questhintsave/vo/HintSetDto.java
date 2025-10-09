@@ -21,9 +21,9 @@ public class HintSetDto {
 
         if (!questHintSave.isHintOneLocked())
             hintSetDto.setHintOne(hint.getHintOne());
-        else if (!questHintSave.isHintTwoLocked())
+        if (!questHintSave.isHintTwoLocked())
             hintSetDto.setHintTwo(hint.getHintTwo());
-        else if (!questHintSave.isHintThreeLocked())
+        if (!questHintSave.isHintThreeLocked())
             hintSetDto.setHintThree(hint.getHintThree());
 
         return hintSetDto;

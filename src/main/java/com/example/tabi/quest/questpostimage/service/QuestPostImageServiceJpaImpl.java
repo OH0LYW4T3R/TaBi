@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -45,6 +46,7 @@ public class QuestPostImageServiceJpaImpl implements QuestPostImageService {
         List<Thumbnail> extractedResult = new ArrayList<>();
 
         List<QuestRunningLocation> forExtract = new ArrayList<>();
+        questPost.getQuest().getQuestRunningLocations().sort(Comparator.comparingInt(QuestRunningLocation::getSequence));
         forExtract.add(questPost.getQuest().getQuestRunningLocations().get(0));
 
         if (questPost.getQuest().getQuestRunningLocations().get(1) != null) {
@@ -53,6 +55,7 @@ public class QuestPostImageServiceJpaImpl implements QuestPostImageService {
 
         for (QuestRunningLocation questRunningLocation : forExtract) {
             List<QuestStep> questSteps = questRunningLocation.getQuestIndicating().getQuestSteps();
+            questSteps.sort(Comparator.comparingInt(QuestStep::getSequence));
 
             int counter = 0;
             for (QuestStep questStep : questSteps) {

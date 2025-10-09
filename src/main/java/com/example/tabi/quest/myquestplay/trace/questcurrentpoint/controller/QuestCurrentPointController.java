@@ -156,29 +156,53 @@ public class QuestCurrentPointController {
         },
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
-            description = "정답 체크 요청",
+            description = "정답 체크 요청 (multipart/form-data). PHOTO_PUZZLE는 파일 파트 사용",
             content = @Content(
-                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
                 schema = @Schema(implementation = QuestCurrentPointAnswerRequest.class),
-                examples = @ExampleObject(
-                    name = "INPUT_PUZZLE 예시",
-                    value = """
-                        {
-                          "actionType": "INPUT_PUZZLE",
-                          "submissionAnswerString": "HANBAT"
-                        }
-                        """
-                )
+                examples = {
+                    @ExampleObject(
+                        name = "INPUT_PUZZLE 예시 (form-data)",
+                        value = """
+                            {
+                              "actionType": "INPUT_PUZZLE",
+                              "submissionAnswerString": "HANBAT"
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "PHOTO_PUZZLE 예시 (form-data)",
+                        description = "submissionImage는 파일 파트로 업로드",
+                        value = """
+                            {
+                              "actionType": "PHOTO_PUZZLE",
+                              "submissionImage": "answer_photo.jpg"
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "LOCATION_PUZZLE 예시 (form-data)",
+                        value = """
+                            {
+                              "actionType": "LOCATION_PUZZLE",
+                              "latitude": 36.3621,
+                              "longitude": 127.3441,
+                              "altitude": 92.0
+                            }
+                            """
+                    )
+                }
             )
         ),
         responses = {
             @ApiResponse(responseCode = "200", description = "검증 성공",
                 content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = QuestAnswerCheckDto.class))),
-            @ApiResponse(responseCode = "400", description = "검증 실패(타입/정답/상태 오류 등)", content = @Content(schema = @Schema(implementation = QuestAnswerCheckDto.class)))
+            @ApiResponse(responseCode = "400", description = "검증 실패(타입/정답/상태 오류 등)",
+                content = @Content(schema = @Schema(implementation = QuestAnswerCheckDto.class)))
         }
     )
-    @PostMapping("/answer-check/{myQuestPlayId}")
-    public ResponseEntity<?> checkAnswer(@PathVariable Long myQuestPlayId, @RequestBody QuestCurrentPointAnswerRequest request) {
+    @PostMapping(value = "/answer-check/{myQuestPlayId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> checkAnswer(@PathVariable Long myQuestPlayId, @ModelAttribute QuestCurrentPointAnswerRequest request) {
         QuestAnswerCheckDto questAnswerCheckDto = questCurrentPointService.checkAnswer(myQuestPlayId, request);
         if (questAnswerCheckDto.getErrorMessage() != null || !questAnswerCheckDto.isAnswered()) {
             // 실패 사유 포함 응답

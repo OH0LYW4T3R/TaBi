@@ -155,6 +155,9 @@ public class QuestPostController {
                 저장 상태(SAVED)일 경우 저장 레코드를 삭제 후 실행으로 전환. <br>
                 로컬에는 /api/my-quest/my-running에 요청을해 위치정보 수입해야 함.
                 """,
+        parameters = {
+            @io.swagger.v3.oas.annotations.Parameter(name = "questPostId", description = "퀘스트 포스트 아이디", required = true, example = "0")
+        },
         responses = {
             @ApiResponse(responseCode = "200", description = "플레이 시작 처리 성공"),
             @ApiResponse(
@@ -170,8 +173,8 @@ public class QuestPostController {
             )
         }
     )
-    @PostMapping("/play")
-    public ResponseEntity<?> playQuestPost(Authentication authentication, @io.swagger.v3.oas.annotations.Parameter(description = "플레이할 퀘스트 게시글 ID", example = "123") @RequestParam("questPostId") Long questPostId) {
+    @PostMapping("/play/{questPostId}")
+    public ResponseEntity<?> playQuestPost(Authentication authentication, @PathVariable Long questPostId) {
         String result = questPostService.playQuestPost(authentication, questPostId);
 
         if ("success".equals(result)) {

@@ -52,10 +52,11 @@ public class QuestIndicatingServiceJpaImpl implements QuestIndicatingService {
 
         Quest quest = questOptional.get();
         List<QuestRunningLocation> questRunningLocations = quest.getQuestRunningLocations();
+        questRunningLocations.sort(Comparator.comparingInt(QuestRunningLocation::getSequence));
 
         List<QuestIndicatingDto> questIndicatingDtos = new ArrayList<>();
-
         for (QuestRunningLocation questRunningLocation : questRunningLocations) {
+
             QuestIndicating updatedQuestIndicating = updateQuestIndicating(questRunningLocation.getQuestIndicating());
             questIndicatingDtos.add(QuestIndicatingDto.questIndicatingToQuestIndicatingDto(updatedQuestIndicating));
         }

@@ -46,8 +46,8 @@ public class MyQuestPlayServiceJpaImpl implements MyQuestPlayService {
 
     private final RewardService rewardService;
 
-    private QuestCurrentPointService questCurrentPointService;
-    private QuestSavePointService questSavePointService;
+    private final QuestCurrentPointService questCurrentPointService;
+    private final QuestSavePointService questSavePointService;
 
     @Override
     @Transactional
