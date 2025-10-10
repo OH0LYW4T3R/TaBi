@@ -13,6 +13,7 @@ import java.util.Set;
 public class MyCharacterDto {
      private Long myCharacterId;
      private Set<Character> characters;
+     private String errorMessage;
 
      private Long appUserId;
 }
