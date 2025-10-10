@@ -3,6 +3,7 @@ package com.example.tabi.quest.questpost.entity;
 import com.example.tabi.postcounter.entity.PostCounter;
 import com.example.tabi.quest.myquest.entity.MyQuest;
 import com.example.tabi.quest.quest.entity.Quest;
+import com.example.tabi.quest.questpostcomment.entity.QuestPostComment;
 import com.example.tabi.quest.questpostimage.entity.QuestPostImage;
 import com.example.tabi.quest.queststartlocation.entity.QuestStartLocation;
 import com.example.tabi.reward.entity.Reward;
@@ -57,6 +58,9 @@ public class QuestPost {
     // 참여 기록 (MyQuest)
     @OneToMany(mappedBy = "questPost", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<MyQuest> myQuests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "questPost", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<QuestPostComment> questPostComments = new ArrayList<>();
 
     // 퀘스트의 실제 정보 및 세부정보
     @OneToOne(mappedBy = "questPost", cascade = CascadeType.ALL, orphanRemoval = true)
