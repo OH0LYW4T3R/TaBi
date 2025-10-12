@@ -1,6 +1,7 @@
 package com.example.tabi.myprofile.entity;
 
 import com.example.tabi.appuser.entity.AppUser;
+import com.example.tabi.myprofile.vo.FollowPolicy;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,6 +22,15 @@ public class MyProfile {
 
     private Integer level;
     private Integer experience;
+
+    private boolean privateProfile = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 32)
+    private FollowPolicy followPolicy = FollowPolicy.AUTO_ACCEPT;
+
+    private long followerCount = 0L;
+    private long followingCount = 0L;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -11,5 +11,9 @@ public class MyProfileDto {
     private String profileImageUrl;
     private Integer level;
     private Integer experience;
+    private boolean privateProfile;
+    private FollowPolicy followPolicy;
+    private long followerCount;
+    private long followingCount;
 }
 

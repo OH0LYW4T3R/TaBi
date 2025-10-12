@@ -6,6 +6,7 @@ import com.example.tabi.appuser.service.AppUserServiceJpaImpl;
 import com.example.tabi.member.repository.MemberRepository;
 import com.example.tabi.myprofile.entity.MyProfile;
 import com.example.tabi.myprofile.repository.MyProfileRepository;
+import com.example.tabi.myprofile.vo.FollowPolicy;
 import com.example.tabi.myprofile.vo.MyProfileDto;
 import com.example.tabi.myprofile.vo.ProfileRequest;
 import jakarta.transaction.Transactional;
@@ -44,6 +45,10 @@ public class MyProfileServiceJpaImpl implements MyProfileService {
         myProfile.setProfileImageUrl(getCharacterImageUrl(profileRequest.getProfileImageUrl()));
         myProfile.setLevel(1);
         myProfile.setExperience(0);
+        myProfile.setPrivateProfile(false);
+        myProfile.setFollowPolicy(FollowPolicy.AUTO_ACCEPT);
+        myProfile.setFollowerCount(0L);
+        myProfile.setFollowingCount(0L);
 
         myProfileRepository.save(myProfile);
 
@@ -85,6 +90,7 @@ public class MyProfileServiceJpaImpl implements MyProfileService {
     }
 
     public static MyProfileDto myProfileToMyProfileDto(MyProfile myProfile) {
-        return new MyProfileDto(myProfile.getMyProfileId(), myProfile.getNickName(), myProfile.getProfileImageUrl(), myProfile.getLevel(), myProfile.getLevel());
+        return new MyProfileDto(myProfile.getMyProfileId(), myProfile.getNickName(), myProfile.getProfileImageUrl(), myProfile.getLevel(), myProfile.getExperience(),
+                myProfile.isPrivateProfile(), myProfile.getFollowPolicy(), myProfile.getFollowerCount(), myProfile.getFollowingCount());
     }
 }
