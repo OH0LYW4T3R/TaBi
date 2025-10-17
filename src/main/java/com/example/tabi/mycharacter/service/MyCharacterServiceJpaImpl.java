@@ -13,6 +13,8 @@ import com.example.tabi.mycharacter.vo.DrawResultDto;
 import com.example.tabi.mycharacter.vo.MyCharacterDto;
 import com.example.tabi.mycharacter.vo.MyCharacterRequest;
 import com.example.tabi.myinventory.entity.MyInventory;
+import com.example.tabi.myprofile.entity.MyProfile;
+import com.example.tabi.myprofile.repository.MyProfileRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -27,6 +29,7 @@ public class MyCharacterServiceJpaImpl implements MyCharacterService {
     private final AppUserRepository appUserRepository;
     private final CharacterRepository characterRepository;
     private final MyCharacterRepository myCharacterRepository;
+    private final MyProfileRepository myProfileRepository;
 
     @Override
     public void createMyCharacter(AppUser appUser) {
@@ -147,6 +150,21 @@ public class MyCharacterServiceJpaImpl implements MyCharacterService {
         AppUser appUser = optionalAppUser.get();
 
         MyCharacter myCharacter = myCharacterRepository.findByAppUser(appUser);
+
+        return myCharacterToMyCharacterDto(myCharacter, null);
+    }
+
+    @Override
+    public MyCharacterDto getMyCharacterForCounterparty(Long myProfileId) {
+        Optional<MyProfile> optionalMyProfile = myProfileRepository.findById(myProfileId);
+
+        if (optionalMyProfile.isEmpty())
+            return null;
+
+        MyProfile myProfile = optionalMyProfile.get();
+        AppUser counterpartyAppUser = myProfile.getAppUser();
+
+        MyCharacter myCharacter = myCharacterRepository.findByAppUser(counterpartyAppUser);
 
         return myCharacterToMyCharacterDto(myCharacter, null);
     }

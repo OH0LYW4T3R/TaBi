@@ -76,7 +76,14 @@ public class MyProfileServiceJpaImpl implements MyProfileService {
 
     @Override
     public MyProfileDto retrieveProfile(String nickName) {
-        return null;
+        Optional<MyProfile> optionalMyProfile = myProfileRepository.findByNickName(nickName);
+
+        if (optionalMyProfile.isEmpty())
+            return null;
+
+        MyProfile myProfile = optionalMyProfile.get();
+
+        return myProfileToMyProfileDto(myProfile);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.example.tabi.mycharacter.vo.DrawResultDto;
 import com.example.tabi.mycharacter.vo.MyCharacterDto;
 import com.example.tabi.mycharacter.vo.MyCharacterRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,6 +52,37 @@ public class MyCharacterController {
         if  (myCharacterDto == null)
             return ResponseEntity.badRequest().body("Not exist AppUser");
 
+        return ResponseEntity.ok(myCharacterDto);
+    }
+
+    @Operation(
+        summary = "상대방 캐릭터 정보 조회",
+        description = "상대방 프로필 ID 기준으로 해당 사용자의 보유 캐릭터 정보를 조회.",
+        parameters = {
+            @Parameter(name = "myProfileId", description = "상대방 MyProfile ID", required = true, example = "42")
+        },
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "조회 성공",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = MyCharacterDto.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "MyProfile Not Found",
+                content = @Content(schema = @Schema(implementation = String.class))
+            )
+        }
+    )
+    @GetMapping("/counterparty-info")
+    public ResponseEntity<?> getCounterpartyCharacterInfo(@RequestParam Long myProfileId) {
+        MyCharacterDto myCharacterDto = myCharacterService.getMyCharacterForCounterparty(myProfileId);
+        if (myCharacterDto == null) {
+            return ResponseEntity.badRequest().body("MyProfile Not Found");
+        }
         return ResponseEntity.ok(myCharacterDto);
     }
 

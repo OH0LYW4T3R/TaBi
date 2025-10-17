@@ -16,4 +16,5 @@ public interface MyCharacterService {
 
     DrawResultDto drawCharacter(Authentication authentication, MyCharacterRequest myCharacterRequest);
     MyCharacterDto getMyCharacter(Authentication authentication);
+    MyCharacterDto getMyCharacterForCounterparty(Long myProfileId);
 }

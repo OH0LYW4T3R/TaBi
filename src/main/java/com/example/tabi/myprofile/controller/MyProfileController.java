@@ -106,6 +106,40 @@ public class MyProfileController {
     }
 
     @Operation(
+        summary = "닉네임으로 상대방 프로필 조회",
+        description = "닉네임으로 상대방 프로필 정보를 조회.",
+        parameters = {
+            @Parameter(
+                name = "nickname",
+                in = ParameterIn.QUERY,
+                description = "조회할 닉네임(대소문자 구분 없음)",
+                required = true,
+                example = "tabi_user"
+            )
+        },
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "프로필 조회 성공",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = MyProfileDto.class)
+                )
+            ),
+            @ApiResponse(responseCode = "404", description = "프로필이 존재하지 않음")
+        }
+    )
+    @GetMapping("/retrieval-nickname")
+    public ResponseEntity<?> getNicknameProfile(Authentication authentication, @RequestParam String nickname) {
+        MyProfileDto myProfileDto = myProfileService.retrieveProfile(nickname);
+
+        if (myProfileDto == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(myProfileDto);
+    }
+
+    @Operation(
         summary = "캐릭터 이미지 조회",
         description = "characterId에 해당하는 캐릭터 이미지 리소스를 반환. <br>*주의* - 해당 이미지 조회는 /api/my-profile 을 제외할것 (ex. domain address/profile-characters/characterId)",
         parameters = {

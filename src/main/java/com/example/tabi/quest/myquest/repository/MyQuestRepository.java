@@ -2,6 +2,7 @@ package com.example.tabi.quest.myquest.repository;
 
 import com.example.tabi.appuser.entity.AppUser;
 import com.example.tabi.quest.myquest.entity.MyQuest;
+import com.example.tabi.quest.myquestplay.entity.MyQuestPlay;
 import com.example.tabi.quest.questpost.entity.QuestPost;
 import com.example.tabi.quest.questpost.vo.QuestPostDto;
 import com.example.tabi.treasurehunt.mytreasurehunt.entity.MyTreasureHunt;
