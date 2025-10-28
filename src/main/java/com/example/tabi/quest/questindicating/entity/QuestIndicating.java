@@ -22,7 +22,7 @@ public class QuestIndicating {
     boolean puzzleAction;
     boolean walkingAction;
 
-    // @OrderBy("sequence ASC") 고려
+    @OrderBy("sequence ASC")
     @OneToMany(mappedBy = "questIndicating", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<QuestStep> questSteps = new ArrayList<>(); // 퀘스트의 순서가 담김
 
