@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -73,9 +74,13 @@ public class PhotoPuzzleActionServiceJpaImpl implements PhotoPuzzleActionService
 
         if (photoPuzzleActionRequest.getPhotoKeywordRequests() != null) {
             if (photoPuzzleAction.getPhotoKeywords() != null && !photoPuzzleAction.getPhotoKeywords().isEmpty()) {
-                for (PhotoKeyword photoKeyword : photoPuzzleAction.getPhotoKeywords()) {
+                Iterator<PhotoKeyword> photoKeywordIterator = photoPuzzleAction.getPhotoKeywords().iterator();
+
+                // ConcurrentModificationException 제거
+                while (photoKeywordIterator.hasNext()) {
+                    PhotoKeyword photoKeyword = photoKeywordIterator.next();
+                    photoKeywordIterator.remove();
                     photoKeywordRepository.delete(photoKeyword);
-                    photoPuzzleAction.getPhotoKeywords().remove(photoKeyword);
                 }
             }
 
