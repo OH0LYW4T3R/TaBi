@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HintDto {
-    private Long hingId;
+    private Long hintId;
 
     private String hintOne;
     private Integer hintOnePrice;
