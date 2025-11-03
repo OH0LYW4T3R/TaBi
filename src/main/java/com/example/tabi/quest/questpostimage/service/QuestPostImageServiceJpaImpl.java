@@ -49,7 +49,7 @@ public class QuestPostImageServiceJpaImpl implements QuestPostImageService {
         questPost.getQuest().getQuestRunningLocations().sort(Comparator.comparingInt(QuestRunningLocation::getSequence));
         forExtract.add(questPost.getQuest().getQuestRunningLocations().get(0));
 
-        if (questPost.getQuest().getQuestRunningLocations().get(1) != null) {
+        if (questPost.getQuest().getQuestRunningLocations().size() > 1) {
             forExtract.add(questPost.getQuest().getQuestRunningLocations().get(1));
         }
 
@@ -66,9 +66,8 @@ public class QuestPostImageServiceJpaImpl implements QuestPostImageService {
                 if (action instanceof TalkingAction) {
                     Thumbnail thumbnail = new Thumbnail(((TalkingAction) action).getStory(), action.getCharacterImageUrl());
                     extractedResult.add(thumbnail);
+                    counter++;
                 }
-
-                counter++;
             }
         }
 
