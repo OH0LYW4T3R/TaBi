@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MyQuestPlayServiceJpaImpl implements MyQuestPlayService {
-    private static final double START_BASE_RADIUS_KM = 0.015;
+    private static final double START_BASE_RADIUS_KM = 1.0;
 
     private final AppUserRepository appUserRepository;
     private final MemberRepository memberRepository;
