@@ -42,6 +42,7 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
     private static final Double ACCEPT_BASE_RADIUS_KM = 0.015;
     private final MyQuestPlayRepository myQuestPlayRepository;
     private final QuestCurrentPointRepository questCurrentPointRepository;
+    private final ImageProcessingService imageProcessingService;
 
     @Override
     @Transactional
@@ -397,7 +398,6 @@ public class QuestCurrentPointServiceJpaImpl implements QuestCurrentPointService
     }
 
     private Boolean keywordMatchingAboutImage(MultipartFile imageFile, List<PhotoKeyword> photoKeywords) {
-        // 추후 API와 연결
-        return true;
+        return imageProcessingService.checkKeywordsInImage(imageFile, photoKeywords);
     }
 }

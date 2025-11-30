@@ -1,8 +1,10 @@
 package com.example.tabi.quest.myquestplay.trace.questcurrentpoint.controller;
 
+import com.example.tabi.quest.actions.photopuzzleaction.entity.PhotoKeyword;
 import com.example.tabi.quest.myquestplay.entity.MyQuestPlay;
 import com.example.tabi.quest.myquestplay.repository.MyQuestPlayRepository;
 import com.example.tabi.quest.myquestplay.trace.questcurrentpoint.entity.QuestCurrentPoint;
+import com.example.tabi.quest.myquestplay.trace.questcurrentpoint.service.ImageProcessingService;
 import com.example.tabi.quest.myquestplay.trace.questcurrentpoint.service.QuestCurrentPointService;
 import com.example.tabi.quest.myquestplay.trace.questcurrentpoint.vo.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,8 +17,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/quest-current-point")
@@ -25,6 +31,7 @@ import java.util.Optional;
 public class QuestCurrentPointController {
     private final QuestCurrentPointService questCurrentPointService;
     private final MyQuestPlayRepository myQuestPlayRepository;
+    private final ImageProcessingService imageProcessingService;
 
     @Operation(
         summary = "현재 진행 액션 상세 조회",
@@ -261,4 +268,21 @@ public class QuestCurrentPointController {
         questCurrentPointService.deleteQuestCurrentPointById(questCurrentPointId);
         return ResponseEntity.noContent().build();
     }
+
+//    @PostMapping("/test/check-image")
+//    public ResponseEntity<String> checkImage(@RequestParam("image") MultipartFile image, @RequestParam("keywords") String keywords) {
+//        List<PhotoKeyword> photoKeywords = Arrays.stream(keywords.split(","))
+//                .map(String::trim)
+//                .filter(s -> !s.isEmpty())
+//                .map(k -> {
+//                    PhotoKeyword pk = new PhotoKeyword();
+//                    pk.setKeyword(k);
+//                    return pk;
+//                })
+//                .collect(Collectors.toList());
+//
+//        boolean result = imageProcessingService.checkKeywordsInImage(image, photoKeywords);
+//
+//        return ResponseEntity.ok("결과: " + (result ? "정답(TRUE)" : "오답(FALSE)"));
+//    }
 }
