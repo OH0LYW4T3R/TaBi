@@ -8,10 +8,10 @@
 - 김영권 : 프론트엔드
 
 ## <u>TaBi</u> Project Background
-<img width="2680" height="5692" alt="image" src="https://github.com/user-attachments/assets/fec28ac4-ed6b-48ff-a605-9daf1cfafe03" />
-<img width="2680" height="5692" alt="image" src="https://github.com/user-attachments/assets/b0a78530-c36b-49cc-bab4-d3b6f69336e5" />
-<img width="2680" height="5692" alt="image" src="https://github.com/user-attachments/assets/c2e69fb8-7df9-412c-bdd5-04632b1de2dc" />
-<img width="2680" height="5692" alt="image" src="https://github.com/user-attachments/assets/04335076-07ef-475b-9c2a-e2bb8f18ec5d" />
+<img width="670" height="1423" alt="image" src="https://github.com/user-attachments/assets/fec28ac4-ed6b-48ff-a605-9daf1cfafe03" />
+<img width="670" height="1423" alt="image" src="https://github.com/user-attachments/assets/b0a78530-c36b-49cc-bab4-d3b6f69336e5" />
+<img width="670" height="1423" alt="image" src="https://github.com/user-attachments/assets/c2e69fb8-7df9-412c-bdd5-04632b1de2dc" />
+<img width="670" height="1423" alt="image" src="https://github.com/user-attachments/assets/04335076-07ef-475b-9c2a-e2bb8f18ec5d" />
 
 
 - ### 필요성
